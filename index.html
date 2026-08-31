@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%2334745f'/%3E%3Cpath d='M9 10h14v3H9zm0 6h6v6H9zm9 0h5v2h-5zm0 4h5v2h-5z' fill='white'/%3E%3C/svg%3E" />
+    <meta name="description" content="Три накопительные ступени SDD и три параллельных ИИ-варианта на примере кредитного калькулятора" />
+    <title>Эталон SDD · Кредитный калькулятор</title>
+    <style>
+      :root { color: #16231f; background: #f3f0e8; font-family: Inter, system-ui, sans-serif; }
+      * { box-sizing: border-box; }
+      body { margin: 0; padding: clamp(24px, 5vw, 72px); }
+      main { max-width: 1160px; margin: 0 auto; }
+      .eyebrow { color: #2d6654; font-weight: 850; letter-spacing: .12em; text-transform: uppercase; }
+      h1 { max-width: 920px; margin: 12px 0 18px; font-size: clamp(42px, 6vw, 76px); line-height: 1; letter-spacing: -.052em; text-wrap: balance; }
+      .lead { max-width: 820px; margin: 0; color: #46534e; font-size: 20px; line-height: 1.55; }
+      ol { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; padding: 0; margin: 42px 0; list-style: none; }
+      .stage-group { display: flex; min-width: 0; flex-direction: column; gap: 12px; padding: 18px; border: 1px solid #d5cec0; border-radius: 26px; background: rgb(255 253 249 / .62); }
+      .stage-heading { min-height: 142px; padding: 6px; }
+      .stage-number { display: inline-flex; align-items: center; justify-content: center; min-width: 42px; height: 30px; padding: 0 10px; border-radius: 999px; color: #fff; background: #2f6d59; font-size: 13px; font-weight: 900; letter-spacing: .08em; }
+      .stage-heading h2 { margin: 16px 0 8px; font-size: 26px; line-height: 1.08; letter-spacing: -.025em; }
+      .stage-heading p { margin: 0; color: #4f5b56; line-height: 1.45; }
+      .variants { display: grid; gap: 12px; }
+      .variant { display: block; min-height: 158px; padding: 20px; color: inherit; background: #fffdfa; border: 1px solid #d5cec0; border-radius: 18px; text-decoration: none; box-shadow: 0 10px 24px rgb(39 52 46 / .06); transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease; }
+      .variant:hover { border-color: #6e9b8c; box-shadow: 0 16px 30px rgb(39 52 46 / .12); transform: translateY(-2px); }
+      .variant:focus-visible { outline: 3px solid rgb(47 109 89 / .32); outline-offset: 3px; }
+      .variant.ai { background: #e8f1ed; border-color: #b8cdc5; }
+      .variant-label { display: block; margin: 0 0 16px; color: #2d6654; font-size: 12px; font-weight: 900; letter-spacing: .09em; text-transform: uppercase; }
+      .variant strong { display: block; font-size: 21px; line-height: 1.15; }
+      .variant-description { display: block; margin-top: 9px; color: #4f5b56; line-height: 1.42; }
+      footer { color: #4f5b56; line-height: 1.5; }
+      @media (max-width: 850px) { ol { grid-template-columns: 1fr; } .stage-heading { min-height: 0; } }
+      @media (prefers-reduced-motion: reduce) { .variant { transition: none; } .variant:hover { transform: none; } }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">Учебный маршрут</p>
+      <h1>Три ступени. На каждой — вариант с ИИ.</h1>
+      <p class="lead">Базовые ступени накапливаются слева направо. ИИ-вариант расширяет только свою ступень и не становится обязательным для следующей.</p>
+      <ol>
+        <li class="stage-group">
+          <div class="stage-heading">
+            <span class="stage-number">01</span>
+            <h2>Шаблон в Git</h2>
+            <p>Фиксируем цель, границы, сценарии и условия готовности.</p>
+          </div>
+          <div class="variants">
+            <a class="variant" href="./01-template-git/"><span class="variant-label">1 · Базовая</span><strong>Шаблон и версия</strong><span class="variant-description">Спецификация и работающий калькулятор.</span></a>
+            <a class="variant ai" href="./01-ai/"><span class="variant-label">1-ИИ · Параллельная</span><strong>Подготовка с ИИ</strong><span class="variant-description">ИИ готовит черновик, человек принимает решения.</span></a>
+          </div>
+        </li>
+        <li class="stage-group">
+          <div class="stage-heading">
+            <span class="stage-number">02</span>
+            <h2>Два ревью</h2>
+            <p>Сначала проверяем содержание, затем техническую реализуемость.</p>
+          </div>
+          <div class="variants">
+            <a class="variant" href="./02-review/"><span class="variant-label">2 · Базовая</span><strong>Последовательное ревью</strong><span class="variant-description">Два решения разных ролей в заданном порядке.</span></a>
+            <a class="variant ai" href="./02-ai/"><span class="variant-label">2-ИИ · Параллельная</span><strong>ИИ-предпроверка</strong><span class="variant-description">ИИ ищет пропуски до обязательных ревью.</span></a>
+          </div>
+        </li>
+        <li class="stage-group">
+          <div class="stage-heading">
+            <span class="stage-number">03</span>
+            <h2>OpenSpec</h2>
+            <p>Связываем причину, требования, дизайн, задачи и результат.</p>
+          </div>
+          <div class="variants">
+            <a class="variant" href="./03-openspec/"><span class="variant-label">3 · Базовая</span><strong>Управляемое изменение</strong><span class="variant-description">Действующая спецификация и архив решений.</span></a>
+            <a class="variant ai" href="./03-ai/"><span class="variant-label">3-ИИ · Параллельная</span><strong>Общий контекст</strong><span class="variant-description">Человек и агент используют одни термины и границы.</span></a>
+          </div>
+        </li>
+      </ol>
+      <footer>Синтетический пример · данные не сохраняются и не отправляются во внешние системы</footer>
+    </main>
+  </body>
+</html>
