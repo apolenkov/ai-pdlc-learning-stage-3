@@ -1,0 +1,97 @@
+{
+  "schemaVersion": 1,
+  "acceptanceProfiles": {
+    "level-1": [
+      "manual-markdown-specification",
+      "observable-payment-41738",
+      "automated-tests-pass",
+      "no-data-transfer"
+    ],
+    "level-2": [
+      "manual-markdown-specification",
+      "observable-payment-41738",
+      "automated-tests-pass",
+      "no-data-transfer",
+      "analyst-review",
+      "technical-review",
+      "merge-request"
+    ],
+    "level-3": [
+      "observable-payment-41738",
+      "automated-tests-pass",
+      "no-data-transfer",
+      "analyst-review",
+      "technical-review",
+      "merge-request",
+      "openspec-strict-validation"
+    ]
+  },
+  "variants": [
+    {
+      "id": "1",
+      "directory": "01-template-git",
+      "kind": "base",
+      "inherits": [],
+      "acceptanceProfile": "level-1",
+      "openspecCli": false
+    },
+    {
+      "id": "1-ai",
+      "directory": "01-ai",
+      "kind": "ai",
+      "baseVariant": "1",
+      "inherits": ["1"],
+      "acceptanceProfile": "level-1",
+      "openspecCli": false,
+      "aiBoundary": {
+        "humanDecisionRequired": true,
+        "secretsAllowed": false,
+        "corporateDataAllowed": false
+      }
+    },
+    {
+      "id": "2",
+      "directory": "02-review",
+      "kind": "base",
+      "inherits": ["1"],
+      "acceptanceProfile": "level-2",
+      "openspecCli": false
+    },
+    {
+      "id": "2-ai",
+      "directory": "02-ai",
+      "kind": "ai",
+      "baseVariant": "2",
+      "inherits": ["2"],
+      "acceptanceProfile": "level-2",
+      "openspecCli": false,
+      "aiBoundary": {
+        "humanDecisionRequired": true,
+        "secretsAllowed": false,
+        "corporateDataAllowed": false
+      }
+    },
+    {
+      "id": "3",
+      "directory": "03-openspec",
+      "kind": "base",
+      "inherits": ["2"],
+      "acceptanceProfile": "level-3",
+      "openspecCli": true
+    },
+    {
+      "id": "3-ai",
+      "directory": "03-ai",
+      "kind": "ai",
+      "baseVariant": "3",
+      "inherits": ["3"],
+      "acceptanceProfile": "level-3",
+      "openspecCli": true,
+      "aiBoundary": {
+        "humanDecisionRequired": true,
+        "secretsAllowed": false,
+        "corporateDataAllowed": false
+      }
+    }
+  ]
+}

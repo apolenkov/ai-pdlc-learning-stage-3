@@ -8,11 +8,15 @@
     "build": "vite build",
     "preview": "vite preview --host 127.0.0.1 --port 4174 --strictPort",
     "typecheck": "tsc --noEmit",
-    "test": "tsx --test \"*/test/*.test.ts\"",
+    "test": "tsx --test \"test/*.test.ts\" \"*/test/*.test.ts\"",
+    "validate:structure": "tsx scripts/validate-learning-structure.ts",
+    "validate:links": "tsx scripts/check-local-links.ts",
+    "privacy:scan": "tsx scripts/privacy-scan.ts",
     "openspec:validate": "cd 03-openspec && openspec validate --all --strict && openspec validate --archived --strict && cd ../03-ai && openspec validate --all --strict && openspec validate --archived --strict",
-    "check": "npm run typecheck && npm test && npm run openspec:validate && npm run build"
+    "check": "npm run typecheck && npm test && npm run validate:structure && npm run validate:links && npm run privacy:scan && npm run openspec:validate && npm run build"
   },
   "devDependencies": {
+    "@fission-ai/openspec": "1.11.0",
     "@types/node": "^24.3.0",
     "tsx": "^4.20.5",
     "typescript": "^5.9.2",
