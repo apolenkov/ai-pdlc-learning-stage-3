@@ -74,24 +74,34 @@ function renderFieldErrors(errors: Partial<Record<keyof LoanInput, string>>): vo
   }
 }
 
+function renderError(message: string, focusError: boolean): void {
+  payment.textContent = "—";
+  total.textContent = "—";
+  overpayment.textContent = "—";
+  errorSummary.hidden = false;
+  errorSummary.textContent = message;
+  if (focusError) {
+    errorSummary.focus();
+  }
+}
+
 function render(focusError = false): void {
   const input = readInput();
   const errors = validate(input);
   renderFieldErrors(errors);
 
   if (Object.keys(errors).length > 0) {
-    payment.textContent = "—";
-    total.textContent = "—";
-    overpayment.textContent = "—";
-    errorSummary.hidden = false;
-    errorSummary.textContent = "Исправьте отмеченные поля и повторите расчёт.";
-    if (focusError) {
-      errorSummary.focus();
-    }
+    renderError("Исправьте отмеченные поля и повторите расчёт.", focusError);
     return;
   }
 
-  const result = calculateLoan(input);
+  let result;
+  try {
+    result = calculateLoan(input);
+  } catch (error) {
+    renderError(error instanceof Error ? error.message : "Не удалось рассчитать платёж. Проверьте значения.", focusError);
+    return;
+  }
   payment.textContent = formatRubles.format(result.monthlyPayment);
   total.textContent = formatRubles.format(result.totalPayment);
   overpayment.textContent = formatRubles.format(result.overpayment);

@@ -31,11 +31,14 @@ export function calculateLoan(input: LoanInput): LoanResult {
   const rawPayment =
     monthlyRate === 0
       ? input.principal / input.months
-      : (input.principal * monthlyRate * (1 + monthlyRate) ** input.months) /
-        ((1 + monthlyRate) ** input.months - 1);
+      : input.principal *
+        (monthlyRate / -Math.expm1(-input.months * Math.log1p(monthlyRate)));
 
   const monthlyPayment = Math.round(rawPayment);
   const totalPayment = monthlyPayment * input.months;
+  if (!Number.isFinite(monthlyPayment) || !Number.isFinite(totalPayment)) {
+    throw new Error("Результат слишком велик для расчёта. Уменьшите сумму, ставку или срок кредита.");
+  }
 
   return {
     monthlyPayment,
