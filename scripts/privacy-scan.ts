@@ -43,12 +43,10 @@ for (const file of files) {
   }
 }
 
-for (const directory of ["01-template-git", "01-ai", "02-review", "02-ai", "03-openspec", "03-ai"]) {
-  for (const source of ["src/app.ts", "src/calculator.ts"]) {
-    const content = readFileSync(resolve(root, directory, source), "utf8");
-    if (/\b(?:fetch|XMLHttpRequest|WebSocket|sendBeacon)\b/.test(content)) {
-      errors.push(`${directory}/${source}: найден сетевой API`);
-    }
+for (const source of ["src/app.ts", "src/calculator.ts"]) {
+  const content = readFileSync(resolve(root, source), "utf8");
+  if (/\b(?:fetch|XMLHttpRequest|WebSocket|sendBeacon)\b/.test(content)) {
+    errors.push(`${source}: найден сетевой API`);
   }
 }
 

@@ -35,4 +35,31 @@ describe("calculateLoan", () => {
       /целым числом/
     );
   });
+
+  for (const principal of [-1, Number.NaN, Number.POSITIVE_INFINITY]) {
+    it(`отклоняет недопустимую сумму ${principal}`, () => {
+      assert.throws(
+        () => calculateLoan({ principal, annualRate: 16, months: 12 }),
+        /больше нуля/
+      );
+    });
+  }
+
+  for (const annualRate of [Number.NaN, Number.POSITIVE_INFINITY]) {
+    it(`отклоняет нечисловую или бесконечную ставку ${annualRate}`, () => {
+      assert.throws(
+        () => calculateLoan({ principal: 100_000, annualRate, months: 12 }),
+        /не может быть отрицательной/
+      );
+    });
+  }
+
+  for (const months of [0, -1, Number.NaN, Number.POSITIVE_INFINITY]) {
+    it(`отклоняет недопустимый срок ${months}`, () => {
+      assert.throws(
+        () => calculateLoan({ principal: 100_000, annualRate: 16, months }),
+        /целым числом/
+      );
+    });
+  }
 });
