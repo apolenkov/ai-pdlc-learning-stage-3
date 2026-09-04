@@ -29,10 +29,10 @@ npm --version
 ```bash
 git clone https://github.com/apolenkov/sdd-guide-credit-calculator-stage-3.git
 cd sdd-credit-calculator-example
-npm install
+npm ci
 ```
 
-`npm install` выполняется один раз из корня репозитория. Внутри папок ступеней нет `package.json`, поэтому запускать установку там не нужно.
+`npm ci` выполняется один раз из корня репозитория. Внутри папок ступеней нет `package.json`, поэтому запускать установку там не нужно.
 
 Для ступени 3 проверьте локальную версию:
 
@@ -40,7 +40,64 @@ npm install
 npm exec openspec -- --version
 ```
 
-Ожидаемый результат: `1.11.0`.
+Ожидаемый результат: `1.12.0`.
+
+### Архитектура OpenSpec для нескольких репозиториев
+
+Это репозиторий кода учебного сервиса. Общие спецификации и
+изменения хранятся в метарепозитории OpenSpec, подключённом под именем
+`sdd-credit-calculator-product-meta`. Связь задаёт корневой
+[`openspec/config.yaml`](openspec/config.yaml); сам сервисный код и его
+Git-история остаются здесь.
+
+В Store используется стандартная схема
+[`spec-driven`](https://openspec.dev/docs/schemas/spec-driven): proposal и
+delta specs задают изменение требований, design — только необходимые решения,
+tasks — реализацию и проверки. Репозиторий сервиса не создаёт параллельную
+копию этих planning-артефактов.
+
+```text
+sdd-credit-calculator-product-meta (Store: specs + changes)
+                 ▲
+                 │ store: sdd-credit-calculator-product-meta
+                 │
+sdd-credit-calculator-example (код + тесты)
+                 │
+        03-openspec/ и 03-ai/ (учебные локальные снапшоты)
+```
+
+Store — единый источник общего плана. OpenSpec не клонирует, не вытягивает и
+не отправляет изменения автоматически: один раз зарегистрируйте Store на
+машине, затем обновляйте его обычным Git. Клонируйте метарепозиторий рядом с
+этим репозиторием и выполните:
+
+```bash
+git clone https://github.com/apolenkov/sdd-guide-credit-calculator-stage-4-requirements.git ../sdd-credit-calculator-product-meta-example
+npm exec openspec -- store register ../sdd-credit-calculator-product-meta-example
+npm exec openspec -- store doctor sdd-credit-calculator-product-meta
+npm exec openspec -- status --all
+npm exec openspec -- workset create credit-calculator \
+  --member service=. \
+  --member meta-store=../sdd-credit-calculator-product-meta-example \
+  --tool code
+npm exec openspec -- workset open credit-calculator
+```
+
+Identity Store уже зафиксирован в его `.openspec-store/store.yaml`. После
+регистрации `npm exec openspec -- status --all` и другие команды из корня сервиса
+работают с Store. Папки `03-openspec/` и `03-ai/` намеренно не перенаправляются
+на Store: это локальные учебные варианты, их артефакты не смешиваются с общим
+продуктовым Change.
+
+Workset — локальный список папок для VS Code или Cursor; он не меняет Git.
+OpenSpec 1.12 не поддерживает OpenCode как opener: откройте Workset в VS Code и
+запустите OpenCode в его встроенном терминале. Project skills OpenSpec уже
+находятся в `.opencode/skills/` этого репозитория.
+
+Реализация выполняется в ветке этого репозитория. После слияния сервисной
+ветки метарепозиторий фиксирует новый SHA сервиса в `services.lock.yaml` и
+проверяется из чистого клона. Store и код проходят отдельные ревью и имеют
+отдельные Git-коммиты.
 
 ### 3. Проверьте и запустите пример
 

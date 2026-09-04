@@ -4,8 +4,9 @@
 
 - `CONTEXT.md`;
 - `openspec/config.yaml`;
-- спецификация `credit-calculator`;
-- синтетический код и тесты этой папки.
+- `openspec/specs/credit-calculator/spec.md`;
+- `src/calculator.ts`;
+- `test/calculator.test.ts`.
 
 ## Задача
 

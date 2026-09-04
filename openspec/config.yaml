@@ -1,0 +1,10 @@
+schema: spec-driven
+
+# Общие продуктовые планы живут в метарепозитории, а не рядом с кодом.
+store: sdd-credit-calculator-product-meta
+
+context: |
+  Этот репозиторий содержит код и тесты учебного кредитного калькулятора.
+  Общие спецификации и Changes находятся в OpenSpec Store
+  sdd-credit-calculator-product-meta; не копируйте их в этот репозиторий.
+  Каталоги 03-openspec и 03-ai остаются самостоятельными учебными снимками.
