@@ -1,123 +1,57 @@
-# Ступень 3. Накопительное ТЗ в OpenSpec
+# Ступень 3: отдельный старт с OpenSpec
 
-На этой ступени вы переносите **свой** принятый `specification.md` из ступени 2 и превращаете накопительное ТЗ в OpenSpec. Новое требование — переключатель режима срока «месяцы / годы» с сохранением существующего ввода в месяцах. Результат — согласованный активный Change `add-reset-and-years-term`; код калькулятора не меняется, Apply не запускается.
+Это готовый учебный репозиторий для тех, кто начинает сразу с R3. Здесь уже есть приложение и подтверждённый baseline. Репозиторий не заменяет личную историю R1→R2→R3 и не требует клонировать или импортировать результаты ступеней 1–2.
 
-Синтетические условия упражнения:
+В основном непрерывном маршруте ученик остаётся в одной своей папке: создаёт следующую ветку от принятого R2, настраивает OpenSpec и переносит весь договор из `specification.md`. Команды ниже относятся только к отдельному позднему старту.
 
-- уже реализованное правило ступени 1 остаётся в baseline: после ошибки предыдущий результат очищен и вместо него показано «—»;
-- ввод целого срока в месяцах и существующие месячные сценарии сохраняются; рядом появляется переключатель режима «месяцы / годы», а его переключение не запускает расчёт;
-- в режиме лет поле имеет шаг `0,5 года`, значение по умолчанию `20 лет` и перед расчётом переводится в целое число месяцев (`0,5 года = 6 месяцев`, `20 лет = 240 месяцев`);
-- ещё не реализованный reset работает в обоих режимах: сохраняет выбранный режим, возвращает `3 000 000 ₽`, `16%` и срок `240 месяцев` либо `20 лет`, очищает ошибки и результаты до «—» и не запускает расчёт.
+Учебная цель — вручную подготовить и согласовать активный Change `add-reset-and-years-term`. Код и runtime-тесты не меняются, Apply не выполняется. Условия учебного продукта:
 
-Это условия учебного продукта, а не банковские правила.
+- сохранить ввод целого срока в месяцах;
+- добавить режим «месяцы / годы» без расчёта при переключении;
+- в режиме лет использовать шаг `0,5 года`, default `20 лет` и перевод `0,5 → 6`, `20 → 240` месяцев;
+- reset сохраняет режим, возвращает `3 000 000 ₽`, `16%` и `240 месяцев` либо `20 лет`, очищает ошибки и результаты до «—» и не запускает расчёт.
 
-## 1. Зафиксируйте источник ступени 2
+## 1. Подготовьте отдельный checkout
 
-Нужны два соседних checkout: ваша завершённая ступень 2 и новый checkout этого репозитория. В исходной папке должны быть актуальные подтверждения другого аналитика и разработчика или архитектора. Автоматическая проверка и ИИ не заменяют эти review.
-
-Из будущего каталога для ступени 3 проверьте источник; замените `<FULL_R2_SHA>` полным SHA принятого коммита:
-
-```bash
-git -C ../sdd-credit-calculator-stage-2-example status --short --branch
-git -C ../sdd-credit-calculator-stage-2-example rev-parse HEAD
-git -C ../sdd-credit-calculator-stage-2-example cat-file -e <FULL_R2_SHA>^{commit}
-git -C ../sdd-credit-calculator-stage-2-example show <FULL_R2_SHA>:specification.md
-```
-
-Если SHA недоступен, дерево грязное или показан не тот документ, остановитесь. Не берите `main` или эталон вместо собственного результата.
-
-## 2. Создайте личную import-base
-
-В командах замените `your_login` и `<FULL_R2_SHA>`. Для повторного прохождения добавьте одинаковый суффикс к обеим личным веткам.
+Действие выполняет ученик. Замените `your_login`; для повтора добавьте согласованный суффикс.
 
 ```bash
 git clone https://github.com/apolenkov/sdd-guide-credit-calculator-stage-3.git
 cd sdd-credit-calculator-example
-git switch -c course/your_login/stage-3-import-base
-npm ci
-npm run check
-git -C ../sdd-credit-calculator-stage-2-example show <FULL_R2_SHA>:specification.md > specification.md
-mkdir -p docs/course
-cp docs/templates/stage-2-transfer.md docs/course/stage-2-transfer.md
-```
-
-Заполните `docs/course/stage-2-transfer.md`: исходный репозиторий, полный SHA, путь `specification.md`, ссылки на два актуальных review и перечень сохранённых сценариев. Затем прочитайте diff и сохраните только импорт:
-
-```bash
-git add specification.md docs/course/stage-2-transfer.md
-git diff --cached
-git commit -m "docs: import personal stage 2 specification"
-git push -u origin course/your_login/stage-3-import-base
-```
-
-Создайте рабочую ветку от этой личной базы:
-
-```bash
 git switch -c course/your_login/stage-3-reset-years
+npm ci
+git status --short --branch
+npm run check
 ```
 
-Импорт и новое задание не смешиваются. Ветка ступени 2 после этого остаётся историей и больше не является активным местом изменения требований.
+Ожидаемый результат: личная ветка, чистое дерево и зелёный существующий baseline. `npm run check` не проверяет будущие reset и режим лет. При ошибке остановитесь и сохраните исходный exit code и текст: не подставляйте другую `main`, не применяйте `force` и не сбрасывайте незнакомые изменения.
 
-## 3. Разделите baseline и ещё не реализованные требования
+## 2. Сверьте baseline
 
-Прочитайте:
-
-- `specification.md` и `docs/course/stage-2-transfer.md`;
-- `openspec/specs/credit-calculator/spec.md`;
-- `src/app.ts`, `src/calculator.ts` и `test/calculator.test.ts` только для проверки текущего поведения;
-- `docs/templates/requirements-traceability.md`.
-
-Скопируйте шаблон:
+Прочитайте `AGENTS.md`, `openspec/config.yaml`, main spec, `src/app.ts`, `src/calculator.ts`, `test/calculator.test.ts` и шаблон матрицы. Код читается только как доказательство текущего поведения.
 
 ```bash
+mkdir -p docs/course
 cp docs/templates/requirements-traceability.md docs/course/requirements-traceability.md
 ```
 
-Заполните матрицу по правилу:
+Baseline содержит только подтверждённое поведение. Всё новое остаётся в активном Change с pending task и точной проверкой. Если код противоречит тексту, зафиксируйте разрыв и остановитесь; не реализуйте функцию ради зелёной документальной проверки.
 
-| Требование | Где должно находиться |
-| --- | --- |
-| Очистка предыдущего результата при ошибке | baseline, потому что это подтверждённое текущее поведение |
-| Reset в обоих режимах срока | активный Change и незавершённая задача с проверкой |
-| Переключатель «месяцы / годы» и перевод лет | активный Change и незавершённая задача с проверкой |
+## 3. Подготовьте Change вручную
 
-Baseline не должен обещать reset или переключатель срока до реализации. Если чтение кода и запущенные проверки не подтверждают требование, не переносите его в baseline: оставьте в Change незавершённую задачу реализации и критерий результата.
+R3 — ручное упражнение. Используйте native CLI и [официальную справку OpenSpec CLI](https://github.com/Fission-AI/OpenSpec/blob/main/docs/cli.md); ИИ не обязателен.
 
-## 4. Подготовьте OpenSpec Change без Apply
-
-Используйте OpenSpec Explore, если после сопоставления осталась существенная развилка. После явного решения создайте через OpenSpec Propose Change `add-reset-and-years-term` по схеме `spec-driven`.
-
-Сообщение агенту:
-
-```text
-Прочитай AGENTS.md, README.md, specification.md,
-docs/course/stage-2-transfer.md,
-docs/course/requirements-traceability.md,
-openspec/specs/credit-calculator/spec.md и текущую реализацию только
-для проверки baseline. Проверь ветку и git status; ничего не сбрасывай.
-
-Подготовь OpenSpec Change add-reset-and-years-term без Apply.
-Baseline должен содержать только подтверждённое текущее поведение.
-В активный Change включи все ещё не реализованные требования:
-1) ввод целого срока в месяцах сохраняется; переключатель «месяцы / годы»
-выбирает единицу ввода и сам не запускает расчёт;
-2) в режиме лет шаг равен 0,5, значение по умолчанию — 20 лет;
-перед расчётом годы переводятся в целые месяцы: 0,5 года = 6 месяцев,
-20 лет = 240 месяцев;
-3) reset работает в обоих режимах, сохраняет выбранный режим, возвращает
-3 000 000 ₽, 16% и срок 240 месяцев либо 20 лет, очищает ошибки
-и результаты до «—» и не запускает расчёт.
-
-Для каждого требования сохрани сценарии, отдельную незавершённую задачу
-реализации и точную проверку результата. Покажи матрицу
-«требование → baseline или Change → сценарий → task → check».
-Не меняй src, index.html, styles.css или test/calculator.test.ts,
-не отмечай tasks выполненными и не архивируй Change.
+```bash
+npm exec openspec -- status --json
+npm exec openspec -- instructions proposal --change add-reset-and-years-term --json
+npm exec openspec -- instructions specs --change add-reset-and-years-term --json
+npm exec openspec -- instructions design --change add-reset-and-years-term --json
+npm exec openspec -- instructions tasks --change add-reset-and-years-term --json
 ```
 
-Проверь, что Change содержит `proposal.md`, delta spec, `design.md` и `tasks.md`. Все задачи реализации reset в обоих режимах, переключателя и перевода лет должны оставаться `- [ ]`.
+Если Change уже существует частично, продолжайте его по `status` и `instructions`; не создавайте дубликат. Нужны `proposal.md`, delta spec, `design.md` и `tasks.md`. Для каждого нового требования сохраните scenario, отдельную task `- [ ]` и проверяемый результат. Не переносите reset и режим лет в main spec как реализованный baseline, не закрывайте tasks и не запускайте Apply.
 
-## 5. Проверьте полноту переноса
+## 4. Проверьте и сохраните planning-результат
 
 ```bash
 npm exec openspec -- status --change add-reset-and-years-term --json
@@ -128,32 +62,49 @@ git diff
 git status --short
 ```
 
-Зелёная проверка доказывает структуру документов и неизменность существующей основы, но не реализацию новых функций.
+Пересчитайте требования, сценарии и pending tasks по файлам. Зелёный `validate` доказывает структуру, но не полноту договора и не реализацию.
 
-Удалите временный рабочий `specification.md` только после того, как матрица показывает все его требования и сценарии в baseline либо активном Change. Исходный текст останется в отдельном import-коммите и в исходном SHA ступени 2.
-
-## 6. Получите два человеческих review
-
-Сначала другой аналитик проверяет полноту требований и сценариев. Затем разработчик или архитектор проверяет реализуемость design, задач и проверок. Оба подтверждения относятся к одному актуальному diff; после содержательных правок нужны новые подтверждения.
-
-Добавьте только учебные документы и Change, прочитайте staged diff и отправьте рабочую ветку:
+После содержательного review добавьте только planning-документы, прочитайте staged diff и получите SHA из Git:
 
 ```bash
-git add -A -- specification.md docs/course \
-  openspec/specs/credit-calculator/spec.md \
+git add docs/course/requirements-traceability.md \
   openspec/changes/add-reset-and-years-term
 git diff --cached
 git status --short
 git commit -m "docs: propose reset and year-based term"
-git push -u origin course/your_login/stage-3-reset-years
+planning_sha=$(git rev-parse HEAD)
+git cat-file -e "$planning_sha^{commit}"
+git show --stat --oneline "$planning_sha"
 ```
 
-Откройте planning PR из `course/your_login/stage-3-reset-years` в личную `course/your_login/stage-3-import-base`, а не в общую `main`. После двух review закройте PR без слияния и сохраните рабочую ветку. Зафиксируйте её полный SHA командой `git rev-parse HEAD`: этот SHA, baseline и весь активный Change передаются организатору ступени 4. Tasks остаются незавершёнными, Change — активным.
+Push и PR выполняйте только с разрешения владельца назначения. Общую `main` эталона не меняйте; в собственном репозитории следуйте его правилам. Два человеческих review должны относиться к одному актуальному SHA. ИИ-review и CLI их не заменяют.
 
-## ИИ-дополнение
+## Необязательное дополнение 3-ИИ
 
-Для необязательной предпроверки используйте [готовое сообщение](ai/request.md). ИИ не создаёт человеческое одобрение.
+После сохранённого R3 можно попросить OpenCode создать **новый** `add-payment-summary` в текущем настроенном проекте. Не переустанавливайте OpenCode и не повторяйте основной Change.
 
-## Реализация отдельно
+```text
+Прочитай AGENTS.md, README.md, main specs, весь активный
+add-reset-and-years-term и docs/course/requirements-traceability.md.
+Проверь папку, ветку и git status; ничего не сбрасывай.
 
-Ступень завершена согласованным Change. Реализация накопительного контракта выполняется только после отдельного разрешения по [практикуму передачи разработчику](docs/developer-handoff.md).
+Создай или продолжи отдельный OpenSpec Change add-payment-summary:
+после расчёта показать общую сумму выплат и переплату; обе величины
+считать из неокруглённого платежа, а отображать в целых рублях.
+При ошибке и reset все результаты возвращаются к «—».
+
+Подготовь proposal, delta specs, design и tasks без Apply. Сохрани
+add-reset-and-years-term целиком. Для каждого будущего поведения оставь
+pending task и проверку. Покажи файлы и пересчёт сценариев и задач.
+Не меняй приложение, runtime-тесты или main specs и не делай commit/push.
+```
+
+Проверь фактические файлы и верните конкретное замечание при расхождении формулы, reset, сценариев или tasks. После исправления повторите проверку. Сохраните 3‑ИИ отдельно; разрешённый PR имеет base на личный R3, не на общую `main`.
+
+## Передача в R4
+
+R4 выполняется в отдельном личном product-meta checkout. Передаются полный planning SHA, все фактические main specs (включая допустимый пустой набор), все активные Changes целиком и их pending tasks. Planning SHA и service pin принадлежат разным репозиториям и проверяются отдельно — один нельзя подменять другим.
+
+В product-meta planning хранится в Store; `.workspace` — закреплённый read-only контекст, не место редактирования требований или кода. Подробный договор — в [практикуме передачи](docs/developer-handoff.md).
+
+Завершённая R3 означает согласованный planning-пакет. Runtime-проверки baseline сохраняются, но реализация будущих задач не требуется для завершения ступени.
