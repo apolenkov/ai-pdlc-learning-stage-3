@@ -18,13 +18,15 @@
 ```bash
 git clone https://github.com/apolenkov/sdd-guide-credit-calculator-stage-3.git
 cd sdd-credit-calculator-example
-git switch -c course/your_login/stage-3-reset-years
+git switch -c course/your_login/stage-3-base
 npm ci
 git status --short --branch
 npm run check
+git switch -c course/your_login/stage-3-reset-years
+git status --short --branch
 ```
 
-Ожидаемый результат: личная ветка, чистое дерево и зелёный существующий baseline. `npm run check` не проверяет будущие reset и режим лет. При ошибке остановитесь и сохраните исходный exit code и текст: не подставляйте другую `main`, не применяйте `force` и не сбрасывайте незнакомые изменения.
+Ожидаемый результат: личная неизменяемая base-ветка создана от проверенного эталона, рабочая ветка Change — от неё. `npm run check` подтверждает только существующий baseline, не будущие reset и режим лет. При ошибке остановитесь и сохраните исходный exit code и текст: не подставляйте другую `main`, не применяйте `force` и не сбрасывайте незнакомые изменения.
 
 ## 2. Сверьте baseline
 
@@ -77,11 +79,16 @@ git cat-file -e "$planning_sha^{commit}"
 git show --stat --oneline "$planning_sha"
 ```
 
-Push и PR выполняйте только с разрешения владельца назначения. Общую `main` эталона не меняйте; в собственном репозитории следуйте его правилам. Два человеческих review должны относиться к одному актуальному SHA. ИИ-review и CLI их не заменяют.
+Push и PR выполняйте только с разрешения владельца назначения. Для общего эталона сначала отправьте личную `course/your_login/stage-3-base`, затем рабочую ветку; planning PR имеет source `course/your_login/stage-3-reset-years` и base `course/your_login/stage-3-base`, не общую `main`. В собственном репозитории следуйте правилам его владельца. Два человеческих review должны относиться к одному актуальному SHA. ИИ-review и CLI их не заменяют.
 
 ## Необязательное дополнение 3-ИИ
 
-После сохранённого R3 можно попросить OpenCode создать **новый** `add-payment-summary` в текущем настроенном проекте. Не переустанавливайте OpenCode и не повторяйте основной Change.
+После сохранённого R3 создайте от него ветку `course/your_login/stage-3-payment-summary`. В ней можно попросить OpenCode создать **новый** `add-payment-summary` в текущем настроенном проекте. Не переустанавливайте OpenCode и не повторяйте основной Change.
+
+```bash
+git switch -c course/your_login/stage-3-payment-summary
+git status --short --branch
+```
 
 ```text
 Прочитай AGENTS.md, README.md, main specs, весь активный
@@ -99,7 +106,7 @@ pending task и проверку. Покажи файлы и пересчёт с
 Не меняй приложение, runtime-тесты или main specs и не делай commit/push.
 ```
 
-Проверь фактические файлы и верните конкретное замечание при расхождении формулы, reset, сценариев или tasks. После исправления повторите проверку. Сохраните 3‑ИИ отдельно; разрешённый PR имеет base на личный R3, не на общую `main`.
+Проверьте фактические файлы и верните конкретное замечание при расхождении формулы, reset, сценариев или tasks. После исправления повторите проверку. Сохраните 3‑ИИ отдельным коммитом; разрешённый PR имеет source `course/your_login/stage-3-payment-summary` и base `course/your_login/stage-3-reset-years`, не общую `main`.
 
 ## Передача в R4
 

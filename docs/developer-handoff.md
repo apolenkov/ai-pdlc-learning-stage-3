@@ -8,6 +8,32 @@
 
 Planning SHA и service pin принадлежат разным Git-репозиториям. Их нельзя сравнивать на равенство, записывать один вместо другого или выводить один из другого.
 
+## Источник Markdown: R1/R2
+
+Для результата R1 или R2 передайте репозиторий, полный принятый SHA и путь `specification.md`. Завершённая папка аналитика остаётся источником ТЗ; код меняется только в отдельном checkout сервиса.
+
+```bash
+# Выберите ровно один источник.
+course_source=../sdd-credit-calculator-stage-1-example
+# course_source=../sdd-credit-calculator-stage-2-example
+source_sha='<40_CHARACTER_SOURCE_SHA>'
+
+git -C "$course_source" cat-file -e "$source_sha^{commit}"
+git -C "$course_source" show "$source_sha:specification.md"
+git status --short --branch
+npm ci
+npm run check
+```
+
+```text
+Прочитай specification.md из указанного полного SHA и AGENTS.md рабочего
+репозитория сервиса. Сопоставь все требования с текущим baseline, кодом
+и тестами. Покажи план, пробелы и проверки. Пока не меняй файлы,
+не запускай Apply и не называй baseline check проверкой новых функций.
+```
+
+Если source SHA недоступен или документ расходится с передачей, остановитесь. Не подставляйте текущую `main` или эталон. Для реализации Markdown-договора сначала согласуйте OpenSpec Change в рабочем репозитории сервиса; разрешение на изменение кода запрашивается отдельно.
+
 ## Проверка R3 без Apply
 
 Рабочая папка — checkout R3 на переданном SHA. До разрешения разработчик действует read-only.
@@ -64,6 +90,28 @@ npm exec openspec -- validate add-reset-and-years-term --strict \
 ```
 
 Для `add-payment-summary` повторите команды с его именем. CLI-успех не доказывает полноту: сверьте inventory путей, сценарии и pending tasks с Git tree planning SHA. `.workspace/services/credit-calculator` не редактируется; наличие pin не является runtime-приёмкой.
+
+### Один владелец planning в personal delivery-ветке сервиса
+
+Общая `main` этого R3-примера остаётся repo-local. Переход сервиса в Store-only выполняется только в отдельной личной delivery-ветке и только после проверенного переноса всего planning-пакета в product-meta.
+
+1. В planning-репозитории проверьте полный planning SHA и inventory всех main specs и активных Changes. Пустой набор main specs допустим.
+2. В Store докажите совпадение каждого перенесённого файла с Git tree planning SHA. Проверьте все активные Changes, включая `add-reset-and-years-term` и, если он есть, `add-payment-summary`.
+3. В личной delivery-ветке сервиса покажите diff с Store. При расхождении остановитесь и разрешите содержательный конфликт; не объединяйте договор автоматически.
+4. Только после полного совпадения удалите из delivery-ветки локальные `openspec/specs` и `openspec/changes`, которые уже перенесены. Не удаляйте неперенесённые или неизвестные файлы.
+5. Скопируйте существующий [Store-only config template](https://github.com/apolenkov/sdd-guide-credit-calculator-stage-4-requirements/blob/main/docs/templates/store-only-config.yaml) из соседнего проверенного product-meta checkout:
+
+```bash
+cp ../sdd-credit-calculator-product-meta-example/docs/templates/store-only-config.yaml \
+  openspec/config.yaml
+npm exec openspec -- store doctor sdd-credit-calculator-product-meta --json
+npm exec openspec -- status --change add-reset-and-years-term --json \
+  --store sdd-credit-calculator-product-meta
+```
+
+Если существует `add-payment-summary`, повторите `status` с его именем. Затем запустите `npm run check`: он должен проверить Store-only конфигурацию личной ветки, отсутствие второй локальной копии planning и доступность всего договора через выбранный Store.
+
+Не переносите Store-only config в общую `main`. Не поддерживайте repo-local и Store как две редактируемые копии. До отдельного разрешения не запускайте Apply, не меняйте код/runtime-тесты и не закрывайте tasks.
 
 ## Реализация отдельно
 
