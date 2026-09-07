@@ -6,16 +6,20 @@ import { test } from "node:test";
 const root = resolve(import.meta.dirname, "..");
 const read = (path: string) => readFile(resolve(root, path), "utf8");
 
-test("stage 3 imports the learner's own stage 2 contract and stops before Apply", async () => {
+test("standalone stage 3 uses a personal base and stops before Apply", async () => {
   const readme = await read("README.md");
-  assert.match(readme, /show <FULL_R2_SHA>:specification\.md > specification\.md/u);
-  assert.match(readme, /docs\/course\/stage-2-transfer\.md/u);
-  assert.match(readme, /course\/your_login\/stage-3-import-base/u);
+  assert.match(readme, /отдельн(?:ый|ому) поздн(?:ий|ему) старт/u);
+  assert.match(readme, /не требует клонировать или импортировать результаты ступеней 1–2/u);
+  assert.doesNotMatch(readme, /git -C \.\.\/sdd-credit-calculator-stage-2-example/u);
+  assert.match(readme, /course\/your_login\/stage-3-base/u);
   assert.match(readme, /course\/your_login\/stage-3-reset-years/u);
+  assert.match(readme, /new change add-reset-and-years-term --schema spec-driven/u);
   assert.match(readme, /add-reset-and-years-term/u);
-  assert.match(readme, /код калькулятора не меняется, Apply не запускается/u);
-  assert.match(readme, /planning PR.*личную.*stage-3-import-base/u);
-  assert.match(readme, /Tasks остаются незавершёнными, Change — активным/u);
+  assert.match(readme, /Код и runtime-тесты не меняются, Apply не выполняется/u);
+  assert.match(readme, /planning PR имеет source.*stage-3-reset-years.*base.*stage-3-base/u);
+  assert.match(readme, /не закрывайте tasks и не запускайте Apply/u);
+  assert.match(readme, /stage-3-ai-payment-summary/u);
+  assert.match(readme, /source.*stage-3-ai-payment-summary.*base.*stage-3-reset-years/u);
 });
 
 test("the cumulative contract maps current and pending behavior without claiming implementation", async () => {
@@ -34,26 +38,35 @@ test("the cumulative contract maps current and pending behavior without claiming
     assert.doesNotMatch(baseline, /Сброс формы|Срок в годах|20 лет/u);
   }
   assert.match(traceability, /3 000 000 \/ 16 \/ 240/u);
-  assert.match(traceability, /переключатель.*месяцы.*годы/u);
+  assert.match(traceability, /переключатель.*месяцы.*годы/iu);
   assert.match(traceability, /шаг `0,5`, default `20`, перевод `0,5→6` и `20→240`/u);
-  assert.match(traceability, /reset.*обоих режимах/u);
+  assert.match(traceability, /Reset в выбранном режиме/u);
+  assert.match(traceability, /режим сохранён/u);
   assert.match(traceability, /pending implementation/u);
-  assert.match(transfer, /Полный SHA принятого коммита/u);
-  assert.match(transfer, /два актуальных review/u);
+  assert.match(transfer, /Полный SHA принятого R2/u);
+  assert.match(transfer, /SHA одного diff, к которому относятся оба review/u);
+  assert.match(traceability, /Main specs: `<ACTUAL_PATHS_OR_EXPLICIT_EMPTY>`/u);
+  assert.match(traceability, /Active Changes: `<ALL_ACTIVE_CHANGE_PATHS>`/u);
+  assert.match(traceability, /Planning source SHA/u);
+  assert.match(traceability, /Service pin/u);
 });
 
 test("developer handoff separates repo-local and Store planning from code authorization", async () => {
   const handoff = await read("docs/developer-handoff.md");
   assert.match(handoff, /instructions apply --change add-reset-and-years-term --json/u);
-  assert.match(handoff, /COURSE_SOURCE=\.\.\/sdd-credit-calculator-stage-1-example/u);
-  assert.match(handoff, /COURSE_SOURCE=\.\.\/sdd-credit-calculator-stage-2-example/u);
-  assert.match(handoff, /git -C "\$COURSE_SOURCE" show <FULL_SOURCE_SHA>:specification\.md/u);
+  assert.match(handoff, /course_source=\.\.\/sdd-credit-calculator-stage-1-example/u);
+  assert.match(handoff, /course_source=\.\.\/sdd-credit-calculator-stage-2-example/u);
+  assert.match(handoff, /git -C "\$course_source" show "\$\{source_sha\}:specification\.md"/u);
+  assert.match(handoff, /Непрерывный R3: planning-only/u);
+  assert.match(handoff, /не запускайте `npm exec`, `npm ci` или runtime-check/iu);
   assert.match(handoff, /store doctor sdd-credit-calculator-product-meta --json/u);
-  assert.match(handoff, /--change limit-credit-amount --json --store sdd-credit-calculator-product-meta/u);
-  assert.match(handoff, /docs\/templates\/store-only-config\.yaml openspec\/config\.yaml/u);
+  assert.match(handoff, /все фактические main specs и все активные Changes/u);
+  assert.match(handoff, /Пустые main specs фиксируются пустым inventory/u);
+  assert.match(handoff, /store-only-config\.yaml/u);
   assert.match(handoff, /\.workspace\/services\/credit-calculator.*read-only/u);
-  assert.match(handoff, /не запускай Apply до моего\s+отдельного разрешения/u);
-  assert.match(handoff, /Общая `main` R3 остаётся repo-local/u);
+  assert.match(handoff, /До отдельного разрешения не запускайте Apply/u);
+  assert.match(handoff, /Общая `main` этого R3-примера остаётся repo-local/u);
+  assert.match(handoff, /ни равенство, ни неравенство не является условием приёмки/u);
 });
 
 test("stage 3 guidance preserves the fixed synthetic exercise values", async () => {
@@ -68,9 +81,11 @@ test("stage 3 guidance preserves the fixed synthetic exercise values", async () 
     assert.match(content, /240/u);
     assert.match(content, /0,5/u);
     assert.match(content, /20 лет/u);
-    assert.match(content, /переключател/u);
-    assert.match(content, /обоих режимах/u);
+    assert.match(content, /переключ|режим «месяцы/iu);
   }
+  assert.match(readme, /reset сохраняет режим.*240 месяцев.*20 лет/su);
+  for (const content of [design, agentRequest]) assert.match(content, /обоих режимах/u);
   assert.match(readme, /не запускает расчёт/u);
-  assert.match(readme, /ввод целого срока в месяцах сохраняется/u);
+  assert.match(readme, /сохранить ввод целого срока в месяцах/u);
+  assert.match(readme, /добавить режим «месяцы \/ годы»/u);
 });

@@ -89,10 +89,10 @@ Push и PR выполняйте только с разрешения владе�
 
 ## Необязательное дополнение 3-ИИ
 
-После сохранённого R3 создайте от него ветку `course/your_login/stage-3-payment-summary`. В ней можно попросить OpenCode создать **новый** `add-payment-summary` в текущем настроенном проекте. Не переустанавливайте OpenCode и не повторяйте основной Change.
+После сохранённого R3 создайте от него ветку `course/your_login/stage-3-ai-payment-summary`. В ней можно попросить OpenCode создать **новый** `add-payment-summary` в текущем настроенном проекте. Не переустанавливайте OpenCode и не повторяйте основной Change.
 
 ```bash
-git switch -c course/your_login/stage-3-payment-summary
+git switch -c course/your_login/stage-3-ai-payment-summary
 git status --short --branch
 ```
 
@@ -112,7 +112,7 @@ pending task и проверку. Покажи файлы и пересчёт с
 Не меняй приложение, runtime-тесты или main specs и не делай commit/push.
 ```
 
-Проверьте фактические файлы и верните конкретное замечание при расхождении формулы, reset, сценариев или tasks. После исправления повторите проверку. Сохраните 3‑ИИ отдельным коммитом; разрешённый PR имеет source `course/your_login/stage-3-payment-summary` и base `course/your_login/stage-3-reset-years`, не общую `main`.
+Проверьте фактические файлы и верните конкретное замечание при расхождении формулы, reset, сценариев или tasks. После исправления повторите проверку. Сохраните 3‑ИИ отдельным коммитом; разрешённый PR имеет source `course/your_login/stage-3-ai-payment-summary` и base `course/your_login/stage-3-reset-years`, не общую `main`.
 
 ## Передача в R4
 
