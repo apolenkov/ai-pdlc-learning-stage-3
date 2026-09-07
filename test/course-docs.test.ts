@@ -69,13 +69,13 @@ test("developer handoff separates repo-local and Store planning from code author
   assert.match(handoff, /ни равенство, ни неравенство не является условием приёмки/u);
 });
 
-test("stage 3 guidance preserves the fixed synthetic exercise values", async () => {
+test("stage 3 AI adds payment summary without replacing the manual change", async () => {
   const [readme, design, agentRequest] = await Promise.all([
     read("README.md"),
     read("DESIGN.md"),
     read("ai/request.md"),
   ]);
-  for (const content of [readme, design, agentRequest]) {
+  for (const content of [readme, design]) {
     assert.match(content, /3 000 000/u);
     assert.match(content, /16%?/u);
     assert.match(content, /240/u);
@@ -84,8 +84,20 @@ test("stage 3 guidance preserves the fixed synthetic exercise values", async () 
     assert.match(content, /переключ|режим «месяцы/iu);
   }
   assert.match(readme, /reset сохраняет режим.*240 месяцев.*20 лет/su);
-  for (const content of [design, agentRequest]) assert.match(content, /обоих режимах/u);
+  assert.match(design, /обоих режимах/u);
   assert.match(readme, /не запускает расчёт/u);
   assert.match(readme, /сохранить ввод целого срока в месяцах/u);
   assert.match(readme, /добавить режим «месяцы \/ годы»/u);
+  assert.match(readme, /\[готовое сообщение 3‑ИИ\]\(ai\/request\.md\)/u);
+  assert.match(agentRequest, /stage-3-ai-payment-summary.*stage-3-reset-years/su);
+  assert.match(agentRequest, /фактически существующие main specs/u);
+  assert.match(agentRequest, /stage-2-transfer\.md.*только как дополнительное.*standalone-входа этот файл не нужен/su);
+  assert.match(agentRequest, /ВЕСЬ активный Change.*add-reset-and-years-term/su);
+  assert.match(agentRequest, /add-payment-summary/u);
+  assert.match(agentRequest, /существует частично.*продолжи его.*не вызывай new/su);
+  assert.match(agentRequest, /неокруглённого платежа/u);
+  assert.match(agentRequest, /При ошибке и reset все три результата возвращаются к «—»/u);
+  assert.match(agentRequest, /не запускай Apply/u);
+  assert.match(agentRequest, /source `course\/your_login\/stage-3-ai-payment-summary`.*base `course\/your_login\/stage-3-reset-years`/su);
+  assert.doesNotMatch(agentRequest, /очистка предыдущего результата при ошибке остаётся\s+подтверждённым baseline/u);
 });

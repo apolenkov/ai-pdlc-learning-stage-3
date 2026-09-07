@@ -89,7 +89,7 @@ Push и PR выполняйте только с разрешения владе�
 
 ## Необязательное дополнение 3-ИИ
 
-После сохранённого R3 создайте от него ветку `course/your_login/stage-3-ai-payment-summary`. В ней можно попросить OpenCode создать **новый** `add-payment-summary` в текущем настроенном проекте. Не переустанавливайте OpenCode и не повторяйте основной Change.
+После сохранённого R3 создайте от него ветку `course/your_login/stage-3-ai-payment-summary`. В ней можно попросить OpenCode создать **новый** `add-payment-summary` в текущем настроенном проекте. Не переустанавливайте OpenCode и не повторяйте основной Change. Используйте [готовое сообщение 3‑ИИ](ai/request.md) либо эквивалентный текст ниже.
 
 ```bash
 git switch -c course/your_login/stage-3-ai-payment-summary
