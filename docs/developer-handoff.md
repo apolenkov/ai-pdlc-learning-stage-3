@@ -6,7 +6,7 @@
 
 Передайте planning repository и полный planning SHA, фактически существующие main specs (пустой набор допустим), **все** активные Changes целиком, матрицу и реальные review. Service repository и точный service pin передаются отдельно.
 
-Planning SHA и service pin принадлежат разным Git-репозиториям. Их нельзя сравнивать на равенство, записывать один вместо другого или выводить один из другого.
+Planning SHA фиксирует источник требований, service pin — версию приложения. Эти доказательства проверяются независимо: репозитории или SHA могут совпасть либо различаться в зависимости от маршрута, и ни равенство, ни неравенство не является условием приёмки. Один SHA нельзя выводить из другого или записывать вместо него.
 
 ## Источник Markdown: R1/R2
 
@@ -19,7 +19,7 @@ course_source=../sdd-credit-calculator-stage-1-example
 source_sha='<40_CHARACTER_SOURCE_SHA>'
 
 git -C "$course_source" cat-file -e "$source_sha^{commit}"
-git -C "$course_source" show "$source_sha:specification.md"
+git -C "$course_source" show "${source_sha}:specification.md"
 git status --short --branch
 npm ci
 npm run check

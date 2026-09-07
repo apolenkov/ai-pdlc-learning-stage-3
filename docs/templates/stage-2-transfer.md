@@ -16,7 +16,7 @@
 ```bash
 source_sha='<40_CHARACTER_SHA>'
 git cat-file -e "$source_sha^{commit}"
-git show "$source_sha:specification.md"
+git show "${source_sha}:specification.md"
 git status --short --branch
 ```
 
