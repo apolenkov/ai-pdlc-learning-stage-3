@@ -36,13 +36,43 @@ npm run check
 
 ## Проверка R3 без Apply
 
-Рабочая папка — checkout R3 на переданном SHA. До разрешения разработчик действует read-only.
+Рабочая папка — checkout R3 на переданном SHA. До разрешения разработчик действует read-only. Сначала выполните общую Git-проверку:
 
 ```bash
 planning_sha='<40_CHARACTER_PLANNING_SHA>'
 git cat-file -e "$planning_sha^{commit}"
 git show --stat --oneline "$planning_sha"
 git status --short --branch
+```
+
+Затем выберите один вариант по составу checkout.
+
+### Непрерывный R3: planning-only
+
+Если R3 продолжает личный Markdown-проект и в нём нет `package.json` приложения, используйте подготовленный native OpenSpec CLI. Не запускайте `npm exec`, `npm ci` или runtime-check несуществующего сервиса.
+
+```bash
+command -v openspec
+openspec status --json
+openspec status --change add-reset-and-years-term --json
+openspec instructions apply --change add-reset-and-years-term --json
+```
+
+Если `command -v openspec` не вернул путь, остановитесь и используйте описанную курсом подготовку CLI; не устанавливайте глобальный пакет самовольно. Эти команды проверяют planning-структуру и показывают будущие инструкции, но не реализуют и не проверяют приложение.
+
+Если выполнено 3‑ИИ:
+
+```bash
+openspec status --change add-payment-summary --json
+openspec instructions apply --change add-payment-summary --json
+```
+
+### Отдельный старт R3: существующее приложение
+
+Если checkout — этот standalone-репозиторий с `package.json`, используйте закреплённую проектом версию CLI и сохраните baseline-check:
+
+```bash
+npm ci
 npm exec openspec -- status --json
 npm exec openspec -- status --change add-reset-and-years-term --json
 npm exec openspec -- instructions apply --change add-reset-and-years-term --json
@@ -56,7 +86,7 @@ npm exec openspec -- status --change add-payment-summary --json
 npm exec openspec -- instructions apply --change add-payment-summary --json
 ```
 
-`instructions apply` только показывает будущий план. Не запускайте Apply, не меняйте tasks и не называйте baseline check проверкой новых функций.
+`instructions apply` только показывает будущий план. Не запускайте Apply и не меняйте tasks. В standalone-варианте `npm run check` подтверждает только существующий baseline; в planning-only варианте runtime-проверки на этой стадии нет.
 
 ```text
 Прочитай AGENTS.md, README.md, фактические main specs, матрицу и ВСЕ

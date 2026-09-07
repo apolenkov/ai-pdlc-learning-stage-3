@@ -45,13 +45,19 @@ R3 — ручное упражнение. Используйте native CLI и [
 
 ```bash
 npm exec openspec -- status --json
+if [ -d openspec/changes/add-reset-and-years-term ]; then
+  printf '%s\n' 'Продолжаем существующий add-reset-and-years-term'
+else
+  npm exec openspec -- new change add-reset-and-years-term --schema spec-driven
+fi
+npm exec openspec -- status --change add-reset-and-years-term --json
 npm exec openspec -- instructions proposal --change add-reset-and-years-term --json
 npm exec openspec -- instructions specs --change add-reset-and-years-term --json
 npm exec openspec -- instructions design --change add-reset-and-years-term --json
 npm exec openspec -- instructions tasks --change add-reset-and-years-term --json
 ```
 
-Если Change уже существует частично, продолжайте его по `status` и `instructions`; не создавайте дубликат. Нужны `proposal.md`, delta spec, `design.md` и `tasks.md`. Для каждого нового требования сохраните scenario, отдельную task `- [ ]` и проверяемый результат. Не переносите reset и режим лет в main spec как реализованный baseline, не закрывайте tasks и не запускайте Apply.
+Проверка каталога создаёт Change ровно один раз. Если он уже существует частично, команда `new change` не вызывается: продолжайте по `status` и `instructions`, не создавая дубликат. Нужны `proposal.md`, delta spec, `design.md` и `tasks.md`. Для каждого нового требования сохраните scenario, отдельную task `- [ ]` и проверяемый результат. Не переносите reset и режим лет в main spec как реализованный baseline, не закрывайте tasks и не запускайте Apply.
 
 ## 4. Проверьте и сохраните planning-результат
 
