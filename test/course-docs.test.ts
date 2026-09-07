@@ -94,7 +94,11 @@ test("stage 3 AI adds payment summary without replacing the manual change", asyn
   assert.match(agentRequest, /stage-2-transfer\.md.*только как дополнительное.*standalone-входа этот файл не нужен/su);
   assert.match(agentRequest, /ВЕСЬ активный Change.*add-reset-and-years-term/su);
   assert.match(agentRequest, /add-payment-summary/u);
-  assert.match(agentRequest, /существует частично.*продолжи его.*не вызывай new/su);
+  assert.match(agentRequest, /существует хотя бы частично.*до любых записей.*только read-only/su);
+  assert.match(agentRequest, /покажи status.*перечисли существующие\s+и недостающие артефакты/su);
+  assert.match(agentRequest, /На этом\s+закончи ответ и ничего не меняй, пока я явно не подтвержу/su);
+  assert.match(agentRequest, /После подтверждения\s+сохрани существующие решения, продолжи тот же Change и не вызывай new\s+повторно/su);
+  assert.match(agentRequest, /STOP\. Больше ничего не меняй.*Ничего не удаляй и не создавай заново.*Дождись моего явного подтверждения продолжить ЭТОТ ЖЕ Change/su);
   assert.match(agentRequest, /неокруглённого платежа/u);
   assert.match(agentRequest, /При ошибке и reset все три результата возвращаются к «—»/u);
   assert.match(agentRequest, /не запускай Apply/u);
