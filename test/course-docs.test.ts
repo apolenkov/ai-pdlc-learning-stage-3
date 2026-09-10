@@ -17,7 +17,7 @@ test("standalone stage 3 uses a personal base and stops before Apply", async () 
   assert.match(readme, /add-reset-and-years-term/u);
   assert.match(readme, /Код и runtime-тесты не меняются, Apply не выполняется/u);
   assert.match(readme, /planning PR имеет source.*stage-3-reset-years.*base.*stage-3-base/u);
-  assert.match(readme, /не закрывайте tasks и не запускайте Apply/u);
+  assert.match(readme, /не закрывайте задачи и не запускайте Apply/u);
   assert.match(readme, /stage-3-ai-payment-summary/u);
   assert.match(readme, /source.*stage-3-ai-payment-summary.*base.*stage-3-reset-years/u);
 });
@@ -42,7 +42,7 @@ test("the cumulative contract maps current and pending behavior without claiming
   assert.match(traceability, /шаг `0,5`, default `20`, перевод `0,5→6` и `20→240`/u);
   assert.match(traceability, /Reset в выбранном режиме/u);
   assert.match(traceability, /режим сохранён/u);
-  assert.match(traceability, /pending implementation/u);
+  assert.match(traceability, /незавершённая реализация/u);
   assert.match(transfer, /Полный SHA принятого R2/u);
   assert.match(transfer, /SHA одного diff, к которому относятся оба review/u);
   assert.match(traceability, /Main specs: `<ACTUAL_PATHS_OR_EXPLICIT_EMPTY>`/u);
@@ -57,7 +57,7 @@ test("developer handoff separates repo-local and Store planning from code author
   assert.match(handoff, /course_source=\.\.\/sdd-credit-calculator-stage-1-example/u);
   assert.match(handoff, /course_source=\.\.\/sdd-credit-calculator-stage-2-example/u);
   assert.match(handoff, /git -C "\$course_source" show "\$\{source_sha\}:specification\.md"/u);
-  assert.match(handoff, /Непрерывный R3: planning-only/u);
+  assert.match(handoff, /Сквозной R3: planning-only/u);
   assert.match(handoff, /не запускайте `npm exec`, `npm ci` или runtime-check/iu);
   assert.match(handoff, /store doctor sdd-credit-calculator-product-meta --json/u);
   assert.match(handoff, /все фактические main specs и все активные Changes/u);

@@ -1,6 +1,6 @@
-# Передача planning-пакета и будущая реализация
+# Передача пакета планирования и будущая реализация
 
-Этот практикум не входит в приёмку R3/3‑ИИ. Завершённая ступень даёт согласованные документы с pending tasks, а не реализованные функции. Apply и правки кода начинаются только после отдельного разрешения владельца.
+Этот практикум не входит в приёмку R3/3‑ИИ. Завершённая ступень даёт согласованные документы с незавершёнными задачами, а не реализованные функции. Apply и правки кода начинаются только после отдельного разрешения владельца.
 
 ## Полный договор
 
@@ -47,7 +47,7 @@ git status --short --branch
 
 Затем выберите один вариант по составу checkout.
 
-### Непрерывный R3: planning-only
+### Сквозной R3: planning-only
 
 Если R3 продолжает личный Markdown-проект и в нём нет `package.json` приложения, используйте подготовленный native OpenSpec CLI. Не запускайте `npm exec`, `npm ci` или runtime-check несуществующего сервиса.
 
@@ -58,7 +58,7 @@ openspec status --change add-reset-and-years-term --json
 openspec instructions apply --change add-reset-and-years-term --json
 ```
 
-Если `command -v openspec` не вернул путь, остановитесь и используйте описанную курсом подготовку CLI; не устанавливайте глобальный пакет самовольно. Эти команды проверяют planning-структуру и показывают будущие инструкции, но не реализуют и не проверяют приложение.
+Если `command -v openspec` не вернул путь, остановитесь и используйте описанную курсом подготовку CLI; не устанавливайте глобальный пакет самовольно. Эти команды проверяют структуру планирования и показывают будущие инструкции, но не реализуют и не проверяют приложение.
 
 Если выполнено 3‑ИИ:
 
@@ -86,12 +86,12 @@ npm exec openspec -- status --change add-payment-summary --json
 npm exec openspec -- instructions apply --change add-payment-summary --json
 ```
 
-`instructions apply` только показывает будущий план. Не запускайте Apply и не меняйте tasks. В standalone-варианте `npm run check` подтверждает только существующий baseline; в planning-only варианте runtime-проверки на этой стадии нет.
+`instructions apply` только показывает будущий план. Не запускайте Apply и не меняйте tasks. В standalone-варианте `npm run check` подтверждает только существующее состояние; в planning-only варианте runtime-проверки на этой стадии нет.
 
 ```text
 Прочитай AGENTS.md, README.md, фактические main specs, матрицу и ВСЕ
 активные Changes. Проверь planning SHA, ветку и чистоту дерева.
-Покажи inventory requirement → scenario → pending task → check,
+Покажи inventory requirement → scenario → незавершённая задача → check,
 зависимости Changes и план будущих edits. Пока ничего не меняй,
 не запускай Apply и не называй baseline check проверкой новых функций.
 ```
@@ -119,13 +119,13 @@ npm exec openspec -- validate add-reset-and-years-term --strict \
   --store sdd-credit-calculator-product-meta
 ```
 
-Для `add-payment-summary` повторите команды с его именем. CLI-успех не доказывает полноту: сверьте inventory путей, сценарии и pending tasks с Git tree planning SHA. `.workspace/services/credit-calculator` не редактируется; наличие pin не является runtime-приёмкой.
+Для `add-payment-summary` повторите команды с его именем. CLI-успех не доказывает полноту: сверьте inventory путей, сценарии и незавершённые задачи с Git tree SHA планирования. `.workspace/services/credit-calculator` не редактируется; наличие pin не является runtime-приёмкой.
 
 ### Один владелец planning в personal delivery-ветке сервиса
 
-Общая `main` этого R3-примера остаётся repo-local. Переход сервиса в Store-only выполняется только в отдельной личной delivery-ветке и только после проверенного переноса всего planning-пакета в product-meta.
+Общая `main` этого R3-примера остаётся repo-local. Переход сервиса в Store-only выполняется только в отдельной личной delivery-ветке и только после проверенного переноса всего пакета планирования в product-meta.
 
-1. В planning-репозитории проверьте полный planning SHA и inventory всех main specs и активных Changes. Пустой набор main specs допустим.
+1. В репозитории планирования проверьте полный SHA планирования и inventory всех main specs и активных Changes. Пустой набор main specs допустим.
 2. В Store докажите совпадение каждого перенесённого файла с Git tree planning SHA. Проверьте все активные Changes, включая `add-reset-and-years-term` и, если он есть, `add-payment-summary`.
 3. В личной delivery-ветке сервиса покажите diff с Store. При расхождении остановитесь и разрешите содержательный конфликт; не объединяйте договор автоматически.
 4. Только после полного совпадения удалите из delivery-ветки локальные `openspec/specs` и `openspec/changes`, которые уже перенесены. Не удаляйте неперенесённые или неизвестные файлы.

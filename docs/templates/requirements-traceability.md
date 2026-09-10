@@ -5,10 +5,10 @@
 | Требование / сценарий | Источник: repo + полный SHA + путь | Baseline или активный Change | Путь и заголовок сценария | Pending task, если не реализовано | Проверка результата | Статус |
 | --- | --- | --- | --- | --- | --- | --- |
 | Ошибка очищает предыдущий результат | `<SOURCE>` | `openspec/specs/credit-calculator/spec.md` | `<BASELINE_SCENARIO>` | — только при доказанном поведении | существующий код, тест и ручной сценарий | `<VERIFIED_OR_GAP>` |
-| Переключатель «месяцы / годы» | `условие R3` | `openspec/changes/add-reset-and-years-term` | `<DELTA_SCENARIO>` | `<PENDING_TASK_ID>` | переключение не запускает расчёт; ввод целых месяцев сохранён | `pending implementation` |
-| Срок в годах | `условие R3` | `openspec/changes/add-reset-and-years-term` | `<DELTA_SCENARIO>` | `<PENDING_TASK_ID>` | шаг `0,5`, default `20`, перевод `0,5→6` и `20→240` | `pending implementation` |
-| Reset в выбранном режиме | `условие R3` | `openspec/changes/add-reset-and-years-term` | `<DELTA_SCENARIO>` | `<PENDING_TASK_ID>` | режим сохранён; значения `3 000 000 / 16 / 240 месяцев` либо `20 лет`; ошибки и результаты очищены без расчёта | `pending implementation` |
-| Общая сумма и переплата | `условие 3-ИИ`, если выполнено | `openspec/changes/add-payment-summary` | `<DELTA_SCENARIO>` | `<PENDING_TASK_ID>` | формулы используют неокруглённый платёж; display — целые рубли; ошибка/reset очищают три результата | `pending implementation` |
+| Переключатель «месяцы / годы» | `условие R3` | `openspec/changes/add-reset-and-years-term` | `<DELTA_SCENARIO>` | `<PENDING_TASK_ID>` | переключение не запускает расчёт; ввод целых месяцев сохранён | `незавершённая реализация` |
+| Срок в годах | `условие R3` | `openspec/changes/add-reset-and-years-term` | `<DELTA_SCENARIO>` | `<PENDING_TASK_ID>` | шаг `0,5`, default `20`, перевод `0,5→6` и `20→240` | `незавершённая реализация` |
+| Reset в выбранном режиме | `условие R3` | `openspec/changes/add-reset-and-years-term` | `<DELTA_SCENARIO>` | `<PENDING_TASK_ID>` | режим сохранён; значения `3 000 000 / 16 / 240 месяцев` либо `20 лет`; ошибки и результаты очищены без расчёта | `незавершённая реализация` |
+| Общая сумма и переплата | `условие 3-ИИ`, если выполнено | `openspec/changes/add-payment-summary` | `<DELTA_SCENARIO>` | `<PENDING_TASK_ID>` | формулы используют неокруглённый платёж; display — целые рубли; ошибка/reset очищают три результата | `незавершённая реализация` |
 
 ## Контроль полноты R3
 
