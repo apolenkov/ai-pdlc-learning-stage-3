@@ -47,7 +47,7 @@ test("the cumulative contract maps current and pending behavior without claiming
   assert.match(transfer, /SHA одного diff, к которому относятся оба review/u);
   assert.match(traceability, /Main specs: `<ACTUAL_PATHS_OR_EXPLICIT_EMPTY>`/u);
   assert.match(traceability, /Active Changes: `<ALL_ACTIVE_CHANGE_PATHS>`/u);
-  assert.match(traceability, /Planning source SHA/u);
+  assert.match(traceability, /Источник планирования \(SHA\)/u);
   assert.match(traceability, /Service pin/u);
 });
 

@@ -20,15 +20,15 @@
 
 ## Inventory для R4
 
-- Planning repository: `<PLANNING_REPOSITORY>`
-- Planning source SHA: `<40_CHARACTER_PLANNING_SHA>`
+- Репозиторий планирования: `<PLANNING_REPOSITORY>`
+- Источник планирования (SHA): `<40_CHARACTER_PLANNING_SHA>`
 - Main specs: `<ACTUAL_PATHS_OR_EXPLICIT_EMPTY>`
 - Active Changes: `<ALL_ACTIVE_CHANGE_PATHS>`
 - Service repository: `<SERVICE_REPOSITORY>`
 - Service pin: `<40_CHARACTER_SERVICE_SHA>`
 
-- [ ] Planning SHA проверен через `cat-file`/`show` в planning-репозитории.
+- [ ] SHA планирования проверен через `cat-file`/`show` в репозитории планирования.
 - [ ] Service pin проверен отдельно в репозитории приложения.
-- [ ] Все активные Changes перенесены целиком вместе со сценариями и pending tasks.
+- [ ] Все активные Changes перенесены целиком вместе со сценариями и незавершёнными задачами.
 - [ ] Пустой набор main specs сохранён как допустимый факт, без фиктивного baseline.
 - [ ] `.workspace` не редактировалась и Apply не запускался.

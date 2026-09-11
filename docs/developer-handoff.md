@@ -4,9 +4,9 @@
 
 ## Полный договор
 
-Передайте planning repository и полный planning SHA, фактически существующие main specs (пустой набор допустим), **все** активные Changes целиком, матрицу и реальные review. Service repository и точный service pin передаются отдельно.
+Передайте репозиторий планирования и полный SHA планирования, фактически существующие main specs (пустой набор допустим), **все** активные Changes целиком, матрицу и реальные review. Service repository и точный service pin передаются отдельно.
 
-Planning SHA фиксирует источник требований, service pin — версию приложения. Эти доказательства проверяются независимо: репозитории или SHA могут совпасть либо различаться в зависимости от маршрута, и ни равенство, ни неравенство не является условием приёмки. Один SHA нельзя выводить из другого или записывать вместо него.
+SHA планирования фиксирует источник требований, service pin — версию приложения. Эти доказательства проверяются независимо: репозитории или SHA могут совпасть либо различаться в зависимости от маршрута, и ни равенство, ни неравенство не является условием приёмки. Один SHA нельзя выводить из другого или записывать вместо него.
 
 ## Источник Markdown: R1/R2
 
@@ -90,7 +90,7 @@ npm exec openspec -- instructions apply --change add-payment-summary --json
 
 ```text
 Прочитай AGENTS.md, README.md, фактические main specs, матрицу и ВСЕ
-активные Changes. Проверь planning SHA, ветку и чистоту дерева.
+активные Changes. Проверь SHA планирования, ветку и чистоту дерева.
 Покажи inventory requirement → scenario → незавершённая задача → check,
 зависимости Changes и план будущих edits. Пока ничего не меняй,
 не запускай Apply и не называй baseline check проверкой новых функций.
@@ -100,7 +100,7 @@ npm exec openspec -- instructions apply --change add-payment-summary --json
 
 Аналитик работает в одном отдельном checkout product-meta. `openspec/` — единственная редактируемая копия planning; `.workspace` — закреплённый read-only контекст.
 
-Организатор заранее сообщает URL/ref product-meta, Store id и root, planning repository/SHA, service repository/pin, список main specs и всех активных Changes. Из product-meta:
+Организатор заранее сообщает URL/ref product-meta, Store id и root, репозиторий/SHA планирования, service repository/pin, список main specs и всех активных Changes. Из product-meta:
 
 ```bash
 git status --short --branch
@@ -110,7 +110,7 @@ npm exec openspec -- store doctor sdd-credit-calculator-product-meta --json
 
 При грязной папке, неверной ветке или другом Store root остановитесь. Не применяйте `force`, не удаляйте чужую регистрацию и не переназначайте Store автоматически.
 
-Перенос копирует по проверенному planning SHA все фактические main specs и все активные Changes. После 3‑ИИ это минимум `add-reset-and-years-term` и `add-payment-summary`. Пустые main specs фиксируются пустым inventory, а не выдуманным baseline. Archive, sync и Apply не выполняются.
+Перенос копирует по проверенному SHA планирования все фактические main specs и все активные Changes. После 3‑ИИ это минимум `add-reset-and-years-term` и `add-payment-summary`. Пустые main specs фиксируются пустым inventory, а не выдуманным baseline. Archive, sync и Apply не выполняются.
 
 ```bash
 npm exec openspec -- status --change add-reset-and-years-term --json \
@@ -126,7 +126,7 @@ npm exec openspec -- validate add-reset-and-years-term --strict \
 Общая `main` этого R3-примера остаётся repo-local. Переход сервиса в Store-only выполняется только в отдельной личной delivery-ветке и только после проверенного переноса всего пакета планирования в product-meta.
 
 1. В репозитории планирования проверьте полный SHA планирования и inventory всех main specs и активных Changes. Пустой набор main specs допустим.
-2. В Store докажите совпадение каждого перенесённого файла с Git tree planning SHA. Проверьте все активные Changes, включая `add-reset-and-years-term` и, если он есть, `add-payment-summary`.
+2. В Store докажите совпадение каждого перенесённого файла с Git tree по SHA планирования. Проверьте все активные Changes, включая `add-reset-and-years-term` и, если он есть, `add-payment-summary`.
 3. В личной delivery-ветке сервиса покажите diff с Store. При расхождении остановитесь и разрешите содержательный конфликт; не объединяйте договор автоматически.
 4. Только после полного совпадения удалите из delivery-ветки локальные `openspec/specs` и `openspec/changes`, которые уже перенесены. Не удаляйте неперенесённые или неизвестные файлы.
 5. Скопируйте существующий [Store-only config template](https://github.com/apolenkov/sdd-guide-credit-calculator-stage-4-requirements/blob/main/docs/templates/store-only-config.yaml) из соседнего проверенного product-meta checkout:
