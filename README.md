@@ -13,11 +13,15 @@
 
 ## 1. Подготовьте отдельный checkout
 
-Действие выполняет ученик. Замените `your_login`; для повтора добавьте согласованный суффикс.
+Действие выполняет ученик. Откройте
+[`sdd-guide-credit-calculator-stage-3`](https://github.com/apolenkov/sdd-guide-credit-calculator-stage-3)
+в браузере и создайте fork кнопкой **Fork** в интерфейсе GitHub. Замените
+`your_login` своим корпоративным логином; для повтора добавьте согласованный суффикс.
 
 ```bash
-git clone https://github.com/apolenkov/sdd-guide-credit-calculator-stage-3.git
+git clone https://github.example.invalid/your_login/sdd-guide-credit-calculator-stage-3.git
 cd sdd-guide-credit-calculator-stage-3
+git remote get-url origin
 git switch -c course/your_login/stage-3-base
 npm ci
 git status --short --branch
@@ -26,7 +30,7 @@ git switch -c course/your_login/stage-3-reset-years
 git status --short --branch
 ```
 
-Ожидаемый результат: личная неизменяемая base-ветка создана от проверенного эталона, рабочая ветка Change — от неё. `npm run check` подтверждает только существующее поведение, не будущие reset и режим лет. При ошибке остановитесь и сохраните исходный exit code и текст: не подставляйте другую `main`, не применяйте `force` и не сбрасывайте незнакомые изменения.
+Ожидаемый результат: `origin` указывает на ваш fork, личная неизменяемая base-ветка создана от проверенного эталона, рабочая ветка Change — от неё. Второй remote для этого маршрута не нужен. `npm run check` подтверждает только существующее поведение, не будущие reset и режим лет. При ошибке остановитесь и сохраните исходный exit code и текст: не подставляйте другую `main`, не применяйте `force` и не сбрасывайте незнакомые изменения.
 
 ## 2. Сверьте baseline
 
@@ -83,9 +87,11 @@ git commit -m "docs: propose reset and year-based term"
 planning_sha=$(git rev-parse HEAD)
 git cat-file -e "$planning_sha^{commit}"
 git show --stat --oneline "$planning_sha"
+git push -u origin course/your_login/stage-3-base
+git push -u origin course/your_login/stage-3-reset-years
 ```
 
-Отправьте личные ветки в корпоративный fork и откройте PR внутри него: planning PR имеет source `course/your_login/stage-3-reset-years` и base `course/your_login/stage-3-base`, не общую `main`. После двух review PR можно смёржить в личную base-ветку fork; в общую `main` не сливайте. В собственном репозитории следуйте правилам его владельца. Два человеческих review должны относиться к одному актуальному SHA. ИИ-review и CLI их не заменяют.
+Обе команды отправляют ветки в ваш fork через уже настроенный `origin`. Откройте PR внутри этого fork: planning PR имеет source `course/your_login/stage-3-reset-years` и base `course/your_login/stage-3-base`, не общую `main`. После двух review PR можно смёржить в личную base-ветку fork; в общую `main` не сливайте. В собственном репозитории следуйте правилам его владельца. Два человеческих review должны относиться к одному актуальному SHA. ИИ-review и CLI их не заменяют.
 
 ## Необязательное дополнение 3-ИИ
 

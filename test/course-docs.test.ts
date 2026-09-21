@@ -10,7 +10,17 @@ test("standalone stage 3 uses a personal base and stops before Apply", async () 
   const readme = await read("README.md");
   assert.match(readme, /отдельн(?:ый|ому) поздн(?:ий|ему) старт/u);
   assert.match(readme, /не требует клонировать или импортировать результаты ступеней 1–2/u);
-  assert.doesNotMatch(readme, /git -C \.\.\/sdd-credit-calculator-stage-2-example/u);
+  assert.doesNotMatch(readme, /git -C \.\.\/sdd-guide-credit-calculator-stage-2/u);
+  assert.match(readme, /создайте fork.*в интерфейсе GitHub/su);
+  assert.match(
+    readme,
+    /git clone https:\/\/github\.example\.invalid\/your_login\/sdd-guide-credit-calculator-stage-3\.git/u,
+  );
+  assert.match(readme, /`origin`.*ваш fork/su);
+  assert.match(readme, /git push -u origin course\/your_login\/stage-3-base/u);
+  assert.match(readme, /git push -u origin course\/your_login\/stage-3-reset-years/u);
+  assert.doesNotMatch(readme, /git clone https:\/\/github\.example\.invalid\/apolenkov\//u);
+  assert.doesNotMatch(readme, /git remote add/u);
   assert.match(readme, /course\/your_login\/stage-3-base/u);
   assert.match(readme, /course\/your_login\/stage-3-reset-years/u);
   assert.match(readme, /new change add-reset-and-years-term --schema spec-driven/u);
@@ -54,8 +64,8 @@ test("the cumulative contract maps current and pending behavior without claiming
 test("developer handoff separates repo-local and Store planning from code authorization", async () => {
   const handoff = await read("docs/developer-handoff.md");
   assert.match(handoff, /instructions apply --change add-reset-and-years-term --json/u);
-  assert.match(handoff, /course_source=\.\.\/sdd-credit-calculator-stage-1-example/u);
-  assert.match(handoff, /course_source=\.\.\/sdd-credit-calculator-stage-2-example/u);
+  assert.match(handoff, /course_source=\.\.\/sdd-guide-credit-calculator-stage-1/u);
+  assert.match(handoff, /course_source=\.\.\/sdd-guide-credit-calculator-stage-2/u);
   assert.match(handoff, /git -C "\$course_source" show "\$\{source_sha\}:specification\.md"/u);
   assert.match(handoff, /Сквозной R3: planning-only/u);
   assert.match(handoff, /не запускайте `npm exec`, `npm ci` или runtime-check/iu);
@@ -67,6 +77,18 @@ test("developer handoff separates repo-local and Store planning from code author
   assert.match(handoff, /До отдельного разрешения не запускайте Apply/u);
   assert.match(handoff, /Общая `main` этого R3-примера остаётся repo-local/u);
   assert.match(handoff, /ни равенство, ни неравенство не является условием приёмки/u);
+  assert.doesNotMatch(
+    handoff,
+    /sdd-credit-calculator-(?:stage-[12]-example|product-meta-example)/u,
+  );
+});
+
+test("package metadata uses the current repository name", async () => {
+  const [manifest, lockfile] = await Promise.all([read("package.json"), read("package-lock.json")]);
+  for (const content of [manifest, lockfile]) {
+    assert.match(content, /"name": "sdd-guide-credit-calculator-stage-3"/u);
+    assert.doesNotMatch(content, /"name": "sdd-credit-calculator-example"/u);
+  }
 });
 
 test("stage 3 AI adds payment summary without replacing the manual change", async () => {
