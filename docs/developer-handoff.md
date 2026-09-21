@@ -14,8 +14,8 @@ SHA планирования фиксирует источник требова�
 
 ```bash
 # Выберите ровно один источник.
-course_source=../sdd-credit-calculator-stage-1-example
-# course_source=../sdd-credit-calculator-stage-2-example
+course_source=../sdd-guide-credit-calculator-stage-1
+# course_source=../sdd-guide-credit-calculator-stage-2
 source_sha='<40_CHARACTER_SOURCE_SHA>'
 
 git -C "$course_source" cat-file -e "$source_sha^{commit}"
@@ -132,7 +132,7 @@ npm exec openspec -- validate add-reset-and-years-term --strict \
 5. Скопируйте существующий [Store-only config template](https://github.com/apolenkov/sdd-guide-credit-calculator-stage-4-requirements/blob/main/docs/templates/store-only-config.yaml) из соседнего проверенного product-meta checkout:
 
 ```bash
-cp ../sdd-credit-calculator-product-meta-example/docs/templates/store-only-config.yaml \
+cp ../sdd-guide-credit-calculator-stage-4-requirements/docs/templates/store-only-config.yaml \
   openspec/config.yaml
 npm exec openspec -- store doctor sdd-credit-calculator-product-meta --json
 npm exec openspec -- status --change add-reset-and-years-term --json \
