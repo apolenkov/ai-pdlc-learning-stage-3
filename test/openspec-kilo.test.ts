@@ -1,9 +1,12 @@
 import assert from "node:assert/strict";
+import { execFileSync } from "node:child_process";
+import { existsSync } from "node:fs";
 import { readdir, readFile } from "node:fs/promises";
 import { test } from "node:test";
+import { fileURLToPath } from "node:url";
 
-const KILO_ROOT_URL = new URL("../.kilocode/", import.meta.url);
-const KILO_SKILLS_URL = new URL("../.kilocode/skills/", import.meta.url);
+const KILO_SKILLS_URL = new URL("../.kilo/skills/", import.meta.url);
+const REPO_ROOT = fileURLToPath(new URL("../", import.meta.url));
 
 // Planning-only set for the analytical stage: create or continue a Change
 // (propose), think through open branches (explore), and revise existing
@@ -42,11 +45,24 @@ test("native openspec-propose is a planning-only Kilo skill, not a directory stu
   assert.match(skill, /Do not edit project code/u);
 });
 
-test("Kilo tree has no workflows and no files beyond SKILL.md", async () => {
-  const topLevel = (await readdir(KILO_ROOT_URL, { withFileTypes: true })).map(
-    (entry) => entry.name,
+test("tracked .kilo tree carries only the planning SKILL.md files", async () => {
+  const tracked = execFileSync("git", ["ls-files", "-z", "--", ".kilo"], {
+    cwd: REPO_ROOT,
+    encoding: "utf8",
+  })
+    .split("\0")
+    .filter(Boolean)
+    .sort();
+  assert.deepEqual(
+    tracked,
+    EXPECTED_KILO_SKILLS.map(
+      (dirName) => `.kilo/skills/${dirName}/SKILL.md`,
+    ).sort(),
   );
-  assert.deepEqual(topLevel, ["skills"]);
+  assert.equal(
+    existsSync(new URL("../.kilocode/skills/", import.meta.url)),
+    false,
+  );
   for (const dirName of EXPECTED_KILO_SKILLS) {
     const files = await readdir(new URL(`${dirName}/`, KILO_SKILLS_URL));
     assert.deepEqual(files, ["SKILL.md"]);
