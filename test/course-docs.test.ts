@@ -30,6 +30,13 @@ test("standalone stage 3 uses a personal base and stops before Apply", async () 
   assert.match(readme, /не закрывайте задачи и не запускайте Apply/u);
   assert.match(readme, /stage-3-ai-payment-summary/u);
   assert.match(readme, /source.*stage-3-ai-payment-summary.*base.*stage-3-reset-years/u);
+  assert.match(readme, /один личный checkout, созданный на R1/u);
+  assert.match(readme, /не клонируется/u);
+  assert.match(readme, /уже выводятся в baseline/u);
+  assert.match(readme, /51 ₽, общую сумму 102 ₽ и переплату 1 ₽/u);
+  assert.match(readme, /51 ₽, общая сумма 101 ₽ и переплата 0 ₽/u);
+  assert.match(readme, /Новых полей результата не добавлять/u);
+  assert.doesNotMatch(readme, /показать общую сумму выплат и переплату/u);
 });
 
 test("the cumulative contract maps current and pending behavior without claiming implementation", async () => {
@@ -55,6 +62,17 @@ test("the cumulative contract maps current and pending behavior without claiming
   assert.match(traceability, /незавершённая реализация/u);
   assert.match(transfer, /Полный SHA принятого R2/u);
   assert.match(transfer, /SHA одного diff, к которому относятся оба review/u);
+  assert.match(transfer, /course\/<login>\//u);
+  assert.match(transfer, /не клонирует standalone-репозиторий/u);
+  assert.match(transfer, /организатор/u);
+  assert.doesNotMatch(
+    transfer,
+    /Этот шаблон нужен только для основного непрерывного маршрута/u,
+  );
+  assert.doesNotMatch(traceability, /репозиторий и полный SHA baseline/u);
+  assert.match(traceability, /организатор/u);
+  assert.match(traceability, /51\/102\/1/u);
+  assert.match(traceability, /51\/101\/0/u);
   assert.match(traceability, /Main specs: `<ACTUAL_PATHS_OR_EXPLICIT_EMPTY>`/u);
   assert.match(traceability, /Active Changes: `<ALL_ACTIVE_CHANGE_PATHS>`/u);
   assert.match(traceability, /Источник планирования \(SHA\)/u);
@@ -123,7 +141,30 @@ test("stage 3 AI adds payment summary without replacing the manual change", asyn
   assert.match(agentRequest, /STOP\. Больше ничего не меняй.*Ничего не удаляй и не создавай заново.*Дождись моего явного подтверждения продолжить ЭТОТ ЖЕ Change/su);
   assert.match(agentRequest, /неокруглённого платежа/u);
   assert.match(agentRequest, /При ошибке и reset все три результата возвращаются к «—»/u);
+  assert.match(agentRequest, /уже выводятся в baseline/u);
+  assert.match(agentRequest, /51, сумму 102 и переплату 1/u);
+  assert.match(agentRequest, /51, сумму 101 и переплату 0/u);
+  assert.match(agentRequest, /Новых полей результата не добавляй/u);
+  assert.doesNotMatch(agentRequest, /показать общую сумму выплат и переплату/u);
   assert.match(agentRequest, /не запускай Apply/u);
   assert.match(agentRequest, /source `course\/your_login\/stage-3-ai-payment-summary`.*base `course\/your_login\/stage-3-reset-years`/su);
   assert.doesNotMatch(agentRequest, /очистка предыдущего результата при ошибке остаётся\s+подтверждённым baseline/u);
+});
+
+test("baseline spec stays 3 requirements and 6 scenarios; personal branches are fully prefixed", async () => {
+  const [spec, agents, contributing] = await Promise.all([
+    read("openspec/specs/credit-calculator/spec.md"),
+    read("AGENTS.md"),
+    read("CONTRIBUTING.md"),
+  ]);
+  assert.equal((spec.match(/^### Requirement:/gmu) ?? []).length, 3);
+  assert.equal((spec.match(/^#### Scenario:/gmu) ?? []).length, 6);
+  for (const doc of [agents, contributing]) {
+    assert.doesNotMatch(
+      doc,
+      /(?<!course\/(?:your_login|<login>)\/)stage-3-(?:base|reset-years|ai-payment-summary)\b/u,
+    );
+  }
+  assert.doesNotMatch(contributing, /stage-3-import-base/u);
+  assert.match(contributing, /course\/your_login\/stage-3-base/u);
 });
