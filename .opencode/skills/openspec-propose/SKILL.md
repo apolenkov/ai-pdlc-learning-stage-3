@@ -131,7 +131,7 @@ After completing all artifacts, summarize:
 - Change name and location
 - List of artifacts created with brief descriptions, plus any conditional artifact you skipped and why
 - What's ready: "All artifacts needed for implementation are ready."
-- Prompt: "The artifacts are ready for review. When you are ready, run `/openspec-apply-change` or ask me to apply this change."
+- Prompt: "The artifacts are ready for human review. Stop here: do not apply this change and do not edit project code; the planning PR needs two human reviews of its current diff - AI and automated checks are not human approval - and humans decide on the next step."
 
 **Artifact Creation Guidelines**
 
