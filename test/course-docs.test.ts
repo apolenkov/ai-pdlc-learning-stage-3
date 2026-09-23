@@ -37,6 +37,25 @@ test("standalone stage 3 uses a personal base and stops before Apply", async () 
   assert.match(readme, /51 ₽, общая сумма 101 ₽ и переплата 0 ₽/u);
   assert.match(readme, /Новых полей результата не добавлять/u);
   assert.doesNotMatch(readme, /показать общую сумму выплат и переплату/u);
+  // Основной маршрут — браузер и VS Code; терминальные эквиваленты свёрнуты в один блок.
+  assert.match(readme, /Git: Clone/u);
+  assert.match(readme, /Create new branch/u);
+  assert.match(readme, /Source Control/u);
+  assert.match(readme, /Publish Branch/u);
+  assert.ok(
+    readme.indexOf("Git: Clone") < readme.indexOf("git clone https://github.example.invalid"),
+  );
+  const terminalBlock =
+    /<details><summary>Развернуть точные команды<\/summary>([\s\S]*?)<\/details>/u.exec(readme);
+  assert.ok(terminalBlock);
+  for (const command of [
+    /git clone https:\/\/github\.example\.invalid\/your_login\/sdd-guide-credit-calculator-stage-3\.git/u,
+    /git push -u origin course\/your_login\/stage-3-base/u,
+    /git push -u origin course\/your_login\/stage-3-reset-years/u,
+  ]) {
+    assert.match(terminalBlock[1], command);
+  }
+  assert.doesNotMatch(readme, /\.kilocode/u);
 });
 
 test("the cumulative contract maps current and pending behavior without claiming implementation", async () => {
@@ -149,6 +168,14 @@ test("stage 3 AI adds payment summary without replacing the manual change", asyn
   assert.match(agentRequest, /не запускай Apply/u);
   assert.match(agentRequest, /source `course\/your_login\/stage-3-ai-payment-summary`.*base `course\/your_login\/stage-3-reset-years`/su);
   assert.doesNotMatch(agentRequest, /очистка предыдущего результата при ошибке остаётся\s+подтверждённым baseline/u);
+  // 3-ИИ: Kilo Code в VS Code — основной планировщик; OpenCode — свёрнутая альтернатива.
+  assert.match(readme, /Kilo Code/u);
+  assert.match(readme, /\.kilo\/skills/u);
+  assert.match(readme, /openspec-propose/u);
+  assert.match(readme, /<summary>[^<]*OpenCode[^<]*<\/summary>/u);
+  assert.match(agentRequest, /Kilo/u);
+  assert.match(agentRequest, /\.kilo\/skills/u);
+  assert.doesNotMatch(agentRequest, /\.kilocode/u);
 });
 
 test("baseline spec stays 3 requirements and 6 scenarios; personal branches are fully prefixed", async () => {
@@ -167,4 +194,8 @@ test("baseline spec stays 3 requirements and 6 scenarios; personal branches are 
   }
   assert.doesNotMatch(contributing, /stage-3-import-base/u);
   assert.match(contributing, /course\/your_login\/stage-3-base/u);
+  // Полный SHA — опциональное provenance по требованию организаторов, не обязанность при каждом коммите.
+  assert.match(agents, /Kilo/u);
+  assert.doesNotMatch(agents, /полный SHA из Git/u);
+  assert.match(agents, /полный SHA[^\n]*организатор/u);
 });

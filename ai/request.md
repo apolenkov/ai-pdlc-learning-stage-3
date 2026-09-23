@@ -1,8 +1,8 @@
 # 3‑ИИ: новый Change общей суммы и переплаты
 
-Этот необязательный шаг выполняется после сохранённого ручного R3. Рабочая ветка — `course/your_login/stage-3-ai-payment-summary`, созданная от личной `course/your_login/stage-3-reset-years`. Используйте уже настроенный OpenCode-проект; не повторяйте ручной Change.
+Этот необязательный шаг выполняется после сохранённого ручного R3. Рабочая ветка — `course/your_login/stage-3-ai-payment-summary`, созданная от личной `course/your_login/stage-3-reset-years`. Основной инструмент — VS Code с расширением Kilo Code: native-skills `.kilo/skills` (`openspec-propose`, `openspec-update-change`, `openspec-explore`) уже лежат в репозитории, дополнительная настройка не требуется. Не повторяйте ручной Change.
 
-Скопируйте сообщение в OpenCode:
+Скопируйте сообщение в чат Kilo:
 
 ```text
 Прочитай AGENTS.md, README.md, фактически существующие main specs,
@@ -55,3 +55,9 @@ STOP. Больше ничего не меняй. Покажи git status и git 
 ```
 
 После ответа проверьте созданные файлы сами. Если формула, очистка результатов, унаследованный Change или число сценариев/tasks расходятся с файлами, верните конкретное замечание и повторите проверку после исправления. Разрешённый отдельный PR имеет source `course/your_login/stage-3-ai-payment-summary` и base `course/your_login/stage-3-reset-years`, не общую `main`.
+
+<details><summary>Продвинутый вариант: OpenCode</summary>
+
+Если вместо Kilo настроен OpenCode, тот же текст сообщения работает без изменений: дерево `.opencode/skills` уже лежит в репозитории. Ограничения ступени не зависят от инструмента — только planning, без Apply, без commit/push/PR со стороны агента.
+
+</details>
