@@ -58,6 +58,12 @@ test("standalone stage 3 uses a personal base and stops before Apply", async () 
   assert.doesNotMatch(readme, /\.kilocode/u);
 });
 
+test("contributing guide names the canonical personal base branch", async () => {
+  const contributing = await read("CONTRIBUTING.md");
+  assert.match(contributing, /course\/your_login\/stage-3-base/u);
+  assert.doesNotMatch(contributing, /stage-3-import-base/u);
+});
+
 test("the cumulative contract maps current and pending behavior without claiming implementation", async () => {
   const [config, traceability, transfer] = await Promise.all([
     read("openspec/config.yaml"),
