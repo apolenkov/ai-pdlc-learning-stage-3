@@ -59,7 +59,7 @@ Revise a change's existing planning artifacts and keep them coherent. Never edit
    - Read the artifact(s) the request touches and the change's other existing artifacts.
    - Apply the requested edit. Then check every other existing artifact against it - in ANY direction: an edit to a later artifact may require revising an earlier one, not only the other way around. Build order is a useful reading order, not a constraint on which artifacts may be revised.
    - Note everything that is now inconsistent, missing, or contradictory.
-   - Revise only files that already exist (`existingOutputPaths`). Do NOT create artifacts that don't exist yet, and do NOT invent new files under a glob artifact - note them and point the user to `/openspec-continue-change` to create them.
+   - Revise only files that already exist (`existingOutputPaths`). Do NOT create artifacts that don't exist yet, and do NOT invent new files under a glob artifact - note them; `openspec status`/`openspec instructions` show what is missing, and creating it is a separately authorized step (Propose or manual; suggest `/openspec-continue-change` only if verified installed), not this workflow.
    - If the change is already coherent, say so and make no edits.
 
 5. **Confirm and apply, one artifact at a time**
@@ -71,21 +71,21 @@ Revise a change's existing planning artifacts and keep them coherent. Never edit
      ```
 
 6. **Point to the next step (guidance only - NEVER act on it)**
-   - Artifacts still missing -> suggest `/openspec-continue-change` to create them.
-   - Change already implemented (tasks checked off / already applied) -> the code may no longer match the revised plan; suggest `/openspec-apply-change` to carry the delta into code.
-   - Everything done and implemented -> suggest `/openspec-archive-change`.
+   - Artifacts still missing -> do NOT create them here; show `openspec status --change "<name>" --json` and `openspec instructions "<artifact-id>" --change "<name>" --json`, and leave creation to a separately authorized Propose/manual step (suggest `/openspec-continue-change` only if verified installed).
+   - Change already implemented (tasks checked off / already applied) -> the code may no longer match the revised plan. Stop here: record the delta between the revised plan and the implemented code, and hand it to a separately authorized developer after the human reviews - do NOT run `/openspec-apply-change` in this workflow.
+   - Everything done and implemented -> do NOT archive here; record the state and hand it to a separately authorized developer after the human reviews - `/openspec-archive-change` is out of scope for this stage.
 
 **Output**
 
 After each invocation, show:
 - Which artifacts were revised (and which proposed revisions were rejected)
-- Anything deferred to `/openspec-continue-change` (not-yet-created artifacts or files)
+- Anything deferred to a later authorized step (not-yet-created artifacts or files, with the `openspec status`/`openspec instructions` output that shows them)
 - Where the change stands and the recommended next command
 
 **Guardrails**
-- Planning artifacts only - NEVER edit implementation code. If the revised plan implies code changes, stop and point to `/openspec-apply-change`.
+- Planning artifacts only - NEVER edit implementation code. If the revised plan implies code changes, stop: record the implied delta and hand it to a separately authorized developer after human review - do NOT start `/openspec-apply-change` here.
 - Use the artifact ids and paths reported by `openspec status`; never branch on hardcoded artifact names.
 - Edit only the concrete files in `existingOutputPaths`; never write to a glob `resolvedOutputPath`.
-- Do not advance the build frontier: no new artifacts, no new files under glob artifacts - that is `/openspec-continue-change`'s job.
+- Do not advance the build frontier: no new artifacts, no new files under glob artifacts - that belongs to a separately authorized Propose/manual step (or `/openspec-continue-change` if verified installed), never this workflow.
 - Confirm every edit with the user before writing.
 - If the request changes the change's *intent* rather than refining it, first verify whether the optional `/openspec-new-change` workflow is available. If it is, recommend starting fresh with `/openspec-new-change` (the "Update vs. Start Fresh" heuristic). If it is unavailable, ask for a distinct unused change name and recommend `openspec new change "<new-change-name>"` instead.
