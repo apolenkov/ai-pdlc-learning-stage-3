@@ -4,7 +4,7 @@
 
 Основной сквозной маршрут — один личный checkout, созданный на R1: в нём ученик создаёт следующую ветку от принятого R2, настраивает OpenSpec и переносит весь договор из `specification.md`. На сквозном маршруте этот репозиторий не клонируется, а шаблоны `docs/templates` из него не заполняются — там действуют материалы основного курса.
 
-Шаги ниже относятся только к отдельному позднему старту. Он выполняется в браузере и VS Code: fork и PR — в интерфейсе GitHub, clone, ветки и коммиты — в VS Code. Точные команды терминала для сверки и восстановления собраны в одном блоке [«Через терминал»](#через-терминал--точные-команды) — не выполняйте оба варианта подряд.
+Шаги ниже относятся только к отдельному позднему старту. Он выполняется в браузере и VS Code: fork и MR — в интерфейсе GitLab, clone, ветки и коммиты — в VS Code. Точные команды терминала для сверки и восстановления собраны в одном блоке [«Через терминал»](#через-терминал--точные-команды) — не выполняйте оба варианта подряд.
 
 Учебная цель — вручную подготовить и согласовать активный Change `add-reset-and-years-term`. Код и runtime-тесты не меняются, Apply не выполняется. Условия учебного продукта:
 
@@ -19,7 +19,7 @@
 
 Откройте
 [`sdd-guide-credit-calculator-stage-3`](https://github.com/apolenkov/sdd-guide-credit-calculator-stage-3)
-в браузере и создайте fork кнопкой **Fork** в интерфейсе GitHub. Откройте свой
+в браузере и создайте fork кнопкой **Fork** в интерфейсе GitLab. Откройте свой
 fork и скопируйте его HTTPS-адрес. Замените `your_login` своим корпоративным
 логином; для повтора добавьте согласованный суффикс.
 
@@ -96,7 +96,7 @@ git status --short
 
 После содержательного review сохраните только документы планирования через **Source Control** (значок ветки на левой панели): прочитайте весь diff — двойной щелчок по файлу открывает сравнение — добавьте в staged только `docs/course/requirements-traceability.md` и `openspec/changes/add-reset-and-years-term` кнопкой **+** у файла, ещё раз прочитайте staged diff, введите сообщение `docs: propose reset and year-based term` и нажмите **Commit**.
 
-Отправьте обе личные ветки в ваш fork: выберите каждую ветку в строке состояния и нажмите **Publish Branch** (или **Push**) — обе уходят через уже настроенный `origin`. Откройте PR внутри этого fork: planning PR имеет source `course/your_login/stage-3-reset-years` и base `course/your_login/stage-3-base`, не общую `main`. После двух review PR можно смёржить в личную base-ветку fork; в общую `main` не сливайте. В собственном репозитории следуйте правилам его владельца. Два человеческих review должны относиться к одному актуальному diff. ИИ-review и CLI их не заменяют. Полный SHA планирования запишите из блока «Через терминал», только если его требуют для передачи или организаторы.
+Отправьте обе личные ветки в ваш fork: выберите каждую ветку в строке состояния и нажмите **Publish Branch** (или **Push**) — обе уходят через уже настроенный `origin`. Откройте MR внутри этого fork: planning MR имеет source `course/your_login/stage-3-reset-years` и target `course/your_login/stage-3-base`, не общую `main`. Если GitLab предлагает target в upstream `example-group`, смените его на свой fork. После двух review MR можно смёржить в личную base-ветку fork; в общую `main` не сливайте. В собственном репозитории следуйте правилам его владельца. Два человеческих review должны относиться к одному актуальному diff. ИИ-review и CLI их не заменяют. Полный SHA планирования запишите из блока «Через терминал», только если его требуют для передачи или организаторы.
 
 ## Необязательное дополнение 3-ИИ
 
@@ -133,7 +133,7 @@ add-reset-and-years-term целиком. Для каждого будущего 
 Не меняй приложение, runtime-тесты или main specs и не делай commit/push.
 ```
 
-Проверьте фактические файлы и верните конкретное замечание при расхождении формулы, reset, сценариев или tasks. После исправления повторите проверку. Сохраните 3‑ИИ отдельным коммитом через **Source Control**; разрешённый PR имеет source `course/your_login/stage-3-ai-payment-summary` и base `course/your_login/stage-3-reset-years`, не общую `main`.
+Проверьте фактические файлы и верните конкретное замечание при расхождении формулы, reset, сценариев или tasks. После исправления повторите проверку. Сохраните 3‑ИИ отдельным коммитом через **Source Control**; разрешённый MR имеет source `course/your_login/stage-3-ai-payment-summary` и target `course/your_login/stage-3-reset-years`, не общую `main`.
 
 ## Через терминал · точные команды
 
@@ -144,7 +144,7 @@ add-reset-and-years-term целиком. Для каждого будущего 
 Clone fork, проверка `origin` и обе личные ветки (эквивалент шага 1):
 
 ```bash
-git clone https://github.example.invalid/your_login/sdd-guide-credit-calculator-stage-3.git
+git clone https://gitlab.example.invalid/your_login/sdd-guide-credit-calculator-stage-3.git
 cd sdd-guide-credit-calculator-stage-3
 git remote get-url origin
 git switch -c course/your_login/stage-3-base
