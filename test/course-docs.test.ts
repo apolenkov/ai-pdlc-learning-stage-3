@@ -11,25 +11,26 @@ test("standalone stage 3 uses a personal base and stops before Apply", async () 
   assert.match(readme, /отдельн(?:ый|ому) поздн(?:ий|ему) старт/u);
   assert.match(readme, /не требует клонировать или импортировать результаты ступеней 1–2/u);
   assert.doesNotMatch(readme, /git -C \.\.\/sdd-guide-credit-calculator-stage-2/u);
-  assert.match(readme, /создайте fork.*в интерфейсе GitHub/su);
+  assert.match(readme, /создайте fork.*в интерфейсе GitLab/su);
   assert.match(
     readme,
-    /git clone https:\/\/github\.example\.invalid\/your_login\/sdd-guide-credit-calculator-stage-3\.git/u,
+    /git clone https:\/\/gitlab\.example\.invalid\/your_login\/sdd-guide-credit-calculator-stage-3\.git/u,
   );
   assert.match(readme, /`origin`.*ваш fork/su);
   assert.match(readme, /git push -u origin course\/your_login\/stage-3-base/u);
   assert.match(readme, /git push -u origin course\/your_login\/stage-3-reset-years/u);
-  assert.doesNotMatch(readme, /git clone https:\/\/github\.example\.invalid\/apolenkov\//u);
+  assert.doesNotMatch(readme, /git clone https:\/\/gitlab\.example\.invalid\/example-group\//u);
+  assert.doesNotMatch(readme, /git clone https:\/\/github\.example\.invalid\//u);
   assert.doesNotMatch(readme, /git remote add/u);
   assert.match(readme, /course\/your_login\/stage-3-base/u);
   assert.match(readme, /course\/your_login\/stage-3-reset-years/u);
   assert.match(readme, /new change add-reset-and-years-term --schema spec-driven/u);
   assert.match(readme, /add-reset-and-years-term/u);
   assert.match(readme, /Код и runtime-тесты не меняются, Apply не выполняется/u);
-  assert.match(readme, /planning PR имеет source.*stage-3-reset-years.*base.*stage-3-base/u);
+  assert.match(readme, /planning MR имеет source.*stage-3-reset-years.*target.*stage-3-base/u);
   assert.match(readme, /не закрывайте задачи и не запускайте Apply/u);
   assert.match(readme, /stage-3-ai-payment-summary/u);
-  assert.match(readme, /source.*stage-3-ai-payment-summary.*base.*stage-3-reset-years/u);
+  assert.match(readme, /source.*stage-3-ai-payment-summary.*target.*stage-3-reset-years/u);
   assert.match(readme, /один личный checkout, созданный на R1/u);
   assert.match(readme, /не клонируется/u);
   assert.match(readme, /уже выводятся в baseline/u);
@@ -43,13 +44,13 @@ test("standalone stage 3 uses a personal base and stops before Apply", async () 
   assert.match(readme, /Source Control/u);
   assert.match(readme, /Publish Branch/u);
   assert.ok(
-    readme.indexOf("Git: Clone") < readme.indexOf("git clone https://github.example.invalid"),
+    readme.indexOf("Git: Clone") < readme.indexOf("git clone https://gitlab.example.invalid"),
   );
   const terminalBlock =
     /<details><summary>Развернуть точные команды<\/summary>([\s\S]*?)<\/details>/u.exec(readme);
   assert.ok(terminalBlock);
   for (const command of [
-    /git clone https:\/\/github\.example\.invalid\/your_login\/sdd-guide-credit-calculator-stage-3\.git/u,
+    /git clone https:\/\/gitlab\.example\.invalid\/your_login\/sdd-guide-credit-calculator-stage-3\.git/u,
     /git push -u origin course\/your_login\/stage-3-base/u,
     /git push -u origin course\/your_login\/stage-3-reset-years/u,
   ]) {
@@ -172,7 +173,7 @@ test("stage 3 AI adds payment summary without replacing the manual change", asyn
   assert.match(agentRequest, /Новых полей результата не добавляй/u);
   assert.doesNotMatch(agentRequest, /показать общую сумму выплат и переплату/u);
   assert.match(agentRequest, /не запускай Apply/u);
-  assert.match(agentRequest, /source `course\/your_login\/stage-3-ai-payment-summary`.*base `course\/your_login\/stage-3-reset-years`/su);
+  assert.match(agentRequest, /source `course\/your_login\/stage-3-ai-payment-summary`.*target `course\/your_login\/stage-3-reset-years`/su);
   assert.doesNotMatch(agentRequest, /очистка предыдущего результата при ошибке остаётся\s+подтверждённым baseline/u);
   // 3-ИИ: Kilo Code в VS Code — основной планировщик; OpenCode — свёрнутая альтернатива.
   assert.match(readme, /Kilo Code/u);
