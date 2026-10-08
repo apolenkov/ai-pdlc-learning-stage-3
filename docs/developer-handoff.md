@@ -60,13 +60,6 @@ openspec instructions apply --change add-reset-and-years-term --json
 
 Если `command -v openspec` не вернул путь, остановитесь и используйте описанную курсом подготовку CLI; не устанавливайте глобальный пакет самовольно. Эти команды проверяют структуру планирования и показывают будущие инструкции, но не реализуют и не проверяют приложение.
 
-Если выполнено 3‑ИИ:
-
-```bash
-openspec status --change add-payment-summary --json
-openspec instructions apply --change add-payment-summary --json
-```
-
 ### Отдельный старт R3: существующее приложение
 
 Если checkout — этот standalone-репозиторий с `package.json`, используйте закреплённую проектом версию CLI и сохраните baseline-check:
@@ -77,13 +70,6 @@ npm exec openspec -- status --json
 npm exec openspec -- status --change add-reset-and-years-term --json
 npm exec openspec -- instructions apply --change add-reset-and-years-term --json
 npm run check
-```
-
-Если выполнено 3‑ИИ:
-
-```bash
-npm exec openspec -- status --change add-payment-summary --json
-npm exec openspec -- instructions apply --change add-payment-summary --json
 ```
 
 `instructions apply` только показывает будущий план. Не запускайте Apply и не меняйте tasks. В standalone-варианте `npm run check` подтверждает только существующее состояние; в planning-only варианте runtime-проверки на этой стадии нет.
@@ -110,7 +96,7 @@ npm exec openspec -- store doctor sdd-credit-calculator-product-meta --json
 
 При грязной папке, неверной ветке или другом Store root остановитесь. Не применяйте `force`, не удаляйте чужую регистрацию и не переназначайте Store автоматически.
 
-Перенос копирует по проверенному SHA планирования все фактические main specs и все активные Changes. После 3‑ИИ это минимум `add-reset-and-years-term` и `add-payment-summary`. Пустые main specs фиксируются пустым inventory, а не выдуманным baseline. Archive, sync и Apply не выполняются.
+Перенос сохраняет по проверенному SHA планирования все фактические main specs и все активные Changes, без требования специального имени или фиксированного числа. Пустые main specs фиксируются пустым inventory, а не выдуманным baseline. Archive, sync и Apply не выполняются.
 
 ```bash
 npm exec openspec -- status --change add-reset-and-years-term --json \
@@ -119,14 +105,14 @@ npm exec openspec -- validate add-reset-and-years-term --strict \
   --store sdd-credit-calculator-product-meta
 ```
 
-Для `add-payment-summary` повторите команды с его именем. CLI-успех не доказывает полноту: сверьте inventory путей, сценарии и незавершённые задачи с Git tree SHA планирования. `.workspace/services/credit-calculator` не редактируется; наличие pin не является runtime-приёмкой.
+Для каждого другого Change из фактического inventory повторите проверку с его именем. CLI-успех не доказывает полноту: сверьте inventory путей, сценарии и незавершённые задачи с Git tree SHA планирования. `.workspace/services/credit-calculator` не редактируется; наличие pin не является runtime-приёмкой.
 
 ### Один владелец planning в personal delivery-ветке сервиса
 
 Общая `main` этого R3-примера остаётся repo-local. Переход сервиса в Store-only выполняется только в отдельной личной delivery-ветке и только после проверенного переноса всего пакета планирования в product-meta.
 
 1. В репозитории планирования проверьте полный SHA планирования и inventory всех main specs и активных Changes. Пустой набор main specs допустим.
-2. В Store докажите совпадение каждого перенесённого файла с Git tree по SHA планирования. Проверьте все активные Changes, включая `add-reset-and-years-term` и, если он есть, `add-payment-summary`.
+2. В Store докажите совпадение каждого перенесённого файла с Git tree по SHA планирования. Проверьте `add-reset-and-years-term` и каждый другой Change, который реально входит в source inventory.
 3. В личной delivery-ветке сервиса покажите diff с Store. При расхождении остановитесь и разрешите содержательный конфликт; не объединяйте договор автоматически.
 4. Только после полного совпадения удалите из delivery-ветки локальные `openspec/specs` и `openspec/changes`, которые уже перенесены. Не удаляйте неперенесённые или неизвестные файлы.
 5. Скопируйте существующий [Store-only config template](https://github.com/apolenkov/sdd-guide-credit-calculator-stage-4-requirements/blob/main/docs/templates/store-only-config.yaml) из соседнего проверенного product-meta checkout:
@@ -139,7 +125,7 @@ npm exec openspec -- status --change add-reset-and-years-term --json \
   --store sdd-credit-calculator-product-meta
 ```
 
-Если существует `add-payment-summary`, повторите `status` с его именем. Затем запустите `npm run check`: он должен проверить Store-only конфигурацию личной ветки, отсутствие второй локальной копии planning и доступность всего договора через выбранный Store.
+Повторите `status` для каждого другого Change из фактического inventory. Затем запустите `npm run check`: он должен проверить Store-only конфигурацию личной ветки, отсутствие второй локальной копии planning и доступность всего договора через выбранный Store.
 
 Не переносите Store-only config в общую `main`. Не поддерживайте repo-local и Store как две редактируемые копии. До отдельного разрешения не запускайте Apply, не меняйте код/runtime-тесты и не закрывайте tasks.
 
