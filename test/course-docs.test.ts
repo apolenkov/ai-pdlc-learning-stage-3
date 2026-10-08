@@ -6,11 +6,16 @@ import { test } from "node:test";
 const root = resolve(import.meta.dirname, "..");
 const read = (path: string) => readFile(resolve(root, path), "utf8");
 
-test("standalone stage 3 uses a personal base and stops before Apply", async () => {
+test("late R3 entry preserves the shared request, intent, and personal branch boundary", async () => {
   const readme = await read("README.md");
   assert.match(readme, /отдельн(?:ый|ому) поздн(?:ий|ему) старт/u);
-  assert.match(readme, /не требует клонировать или импортировать результаты ступеней 1–2/u);
-  assert.doesNotMatch(readme, /git -C \.\.\/sdd-guide-credit-calculator-stage-2/u);
+  assert.match(readme, /R1–R3.*один запрос и один рабочий intent/su);
+  assert.match(readme, /request-and-answers\.md/u);
+  assert.match(readme, /intent-template\.md/u);
+  assert.match(readme, /examples\/clear-calculation-result\.md/u);
+  assert.match(readme, /intents\/clear-calculation-result\.md/u);
+  assert.match(readme, /R3 не обязательна.*следующий шаг R4/su);
+  assert.match(readme, /ручном планировании без модели/u);
   assert.match(readme, /создайте fork.*в интерфейсе GitLab/su);
   assert.match(
     readme,
@@ -29,15 +34,6 @@ test("standalone stage 3 uses a personal base and stops before Apply", async () 
   assert.match(readme, /Код и runtime-тесты не меняются, Apply не выполняется/u);
   assert.match(readme, /planning MR имеет source.*stage-3-reset-years.*target.*stage-3-base/u);
   assert.match(readme, /не закрывайте задачи и не запускайте Apply/u);
-  assert.match(readme, /stage-3-ai-payment-summary/u);
-  assert.match(readme, /source.*stage-3-ai-payment-summary.*target.*stage-3-reset-years/u);
-  assert.match(readme, /один личный checkout, созданный на R1/u);
-  assert.match(readme, /не клонируется/u);
-  assert.match(readme, /уже выводятся в baseline/u);
-  assert.match(readme, /51 ₽, общую сумму 102 ₽ и переплату 1 ₽/u);
-  assert.match(readme, /51 ₽, общая сумма 101 ₽ и переплата 0 ₽/u);
-  assert.match(readme, /Новых полей результата не добавлять/u);
-  assert.doesNotMatch(readme, /показать общую сумму выплат и переплату/u);
   // Основной маршрут — браузер и VS Code; терминальные эквиваленты свёрнуты в один блок.
   assert.match(readme, /Git: Clone/u);
   assert.match(readme, /Create new branch/u);
@@ -87,9 +83,13 @@ test("the cumulative contract maps current and pending behavior without claiming
   assert.match(traceability, /режим сохранён/u);
   assert.match(traceability, /незавершённая реализация/u);
   assert.match(transfer, /Полный SHA принятого R2/u);
-  assert.match(transfer, /SHA одного diff, к которому относятся оба review/u);
+  assert.match(transfer, /отметка руководителя проекта/iu);
+  assert.match(transfer, /отметка аналитика/iu);
+  assert.match(transfer, /отметка технического руководителя/iu);
+  assert.match(transfer, /отметка архитектора, если изменение архитектурное или есть спор/iu);
   assert.match(transfer, /course\/<login>\//u);
-  assert.match(transfer, /не клонирует standalone-репозиторий/u);
+  assert.match(transfer, /Исходный путь: `specification\.md`/u);
+  assert.match(transfer, /точную фиксацию.*полный SHA/su);
   assert.match(transfer, /организатор/u);
   assert.doesNotMatch(
     transfer,
@@ -97,8 +97,6 @@ test("the cumulative contract maps current and pending behavior without claiming
   );
   assert.doesNotMatch(traceability, /репозиторий и полный SHA baseline/u);
   assert.match(traceability, /организатор/u);
-  assert.match(traceability, /51\/102\/1/u);
-  assert.match(traceability, /51\/101\/0/u);
   assert.match(traceability, /Main specs: `<ACTUAL_PATHS_OR_EXPLICIT_EMPTY>`/u);
   assert.match(traceability, /Active Changes: `<ALL_ACTIVE_CHANGE_PATHS>`/u);
   assert.match(traceability, /Источник планирования \(SHA\)/u);
@@ -135,11 +133,11 @@ test("package metadata uses the current repository name", async () => {
   }
 });
 
-test("stage 3 AI adds payment summary without replacing the manual change", async () => {
-  const [readme, design, agentRequest] = await Promise.all([
+test("manual R3 keeps the agreed reset and year-term behavior planning-only", async () => {
+  const [readme, design, agents] = await Promise.all([
     read("README.md"),
     read("DESIGN.md"),
-    read("ai/request.md"),
+    read("AGENTS.md"),
   ]);
   for (const content of [readme, design]) {
     assert.match(content, /3 000 000/u);
@@ -154,35 +152,11 @@ test("stage 3 AI adds payment summary without replacing the manual change", asyn
   assert.match(readme, /не запускает расчёт/u);
   assert.match(readme, /сохранить ввод целого срока в месяцах/u);
   assert.match(readme, /добавить режим «месяцы \/ годы»/u);
-  assert.match(readme, /\[готовое сообщение 3‑ИИ\]\(ai\/request\.md\)/u);
-  assert.match(agentRequest, /stage-3-ai-payment-summary.*stage-3-reset-years/su);
-  assert.match(agentRequest, /фактически существующие main specs/u);
-  assert.match(agentRequest, /stage-2-transfer\.md.*только как дополнительное.*standalone-входа этот файл не нужен/su);
-  assert.match(agentRequest, /ВЕСЬ активный Change.*add-reset-and-years-term/su);
-  assert.match(agentRequest, /add-payment-summary/u);
-  assert.match(agentRequest, /существует хотя бы частично.*до любых записей.*только read-only/su);
-  assert.match(agentRequest, /покажи status.*перечисли существующие\s+и недостающие артефакты/su);
-  assert.match(agentRequest, /На этом\s+закончи ответ и ничего не меняй, пока я явно не подтвержу/su);
-  assert.match(agentRequest, /После подтверждения\s+сохрани существующие решения, продолжи тот же Change и не вызывай new\s+повторно/su);
-  assert.match(agentRequest, /STOP\. Больше ничего не меняй.*Ничего не удаляй и не создавай заново.*Дождись моего явного подтверждения продолжить ЭТОТ ЖЕ Change/su);
-  assert.match(agentRequest, /неокруглённого платежа/u);
-  assert.match(agentRequest, /При ошибке и reset все три результата возвращаются к «—»/u);
-  assert.match(agentRequest, /уже выводятся в baseline/u);
-  assert.match(agentRequest, /51, сумму 102 и переплату 1/u);
-  assert.match(agentRequest, /51, сумму 101 и переплату 0/u);
-  assert.match(agentRequest, /Новых полей результата не добавляй/u);
-  assert.doesNotMatch(agentRequest, /показать общую сумму выплат и переплату/u);
-  assert.match(agentRequest, /не запускай Apply/u);
-  assert.match(agentRequest, /source `course\/your_login\/stage-3-ai-payment-summary`.*target `course\/your_login\/stage-3-reset-years`/su);
-  assert.doesNotMatch(agentRequest, /очистка предыдущего результата при ошибке остаётся\s+подтверждённым baseline/u);
-  // 3-ИИ: Kilo Code в VS Code — основной планировщик; OpenCode — свёрнутая альтернатива.
-  assert.match(readme, /Kilo Code/u);
-  assert.match(readme, /\.kilo\/skills/u);
-  assert.match(readme, /openspec-propose/u);
-  assert.match(readme, /<summary>[^<]*OpenCode[^<]*<\/summary>/u);
-  assert.match(agentRequest, /Kilo/u);
-  assert.match(agentRequest, /\.kilo\/skills/u);
-  assert.doesNotMatch(agentRequest, /\.kilocode/u);
+  assert.match(readme, /На этой ступени можно остановиться на ручном планировании без модели/u);
+  assert.match(readme, /Apply не выполняется/u);
+  assert.match(agents, /один запрос и один intent.*историей Git/su);
+  assert.match(agents, /не создавайте отдельный intent для каждого урока/u);
+  assert.match(agents, /Apply, правки приложения\/runtime-тестов, закрытие tasks и архивирование Change запрещены/u);
 });
 
 test("baseline spec stays 3 requirements and 6 scenarios; personal branches are fully prefixed", async () => {
@@ -196,13 +170,14 @@ test("baseline spec stays 3 requirements and 6 scenarios; personal branches are 
   for (const doc of [agents, contributing]) {
     assert.doesNotMatch(
       doc,
-      /(?<!course\/(?:your_login|<login>)\/)stage-3-(?:base|reset-years|ai-payment-summary)\b/u,
+      /(?<!course\/(?:your_login|<login>)\/)stage-3-(?:base|reset-years)\b/u,
     );
   }
   assert.doesNotMatch(contributing, /stage-3-import-base/u);
   assert.match(contributing, /course\/your_login\/stage-3-base/u);
-  // Полный SHA — опциональное provenance по требованию организаторов, не обязанность при каждом коммите.
-  assert.match(agents, /Kilo/u);
+  // SHA фиксируется по реальной потребности происхождения и передачи, не при каждом коммите.
+  assert.match(agents, /один запрос и один intent.*историей Git/su);
+  assert.match(agents, /Автоматическая проверка и ИИ не заменяют людей/u);
   assert.doesNotMatch(agents, /полный SHA из Git/u);
-  assert.match(agents, /полный SHA[^\n]*организатор/u);
+  assert.match(agents, /SHA фиксируйте для происхождения, передачи или по требованию/u);
 });
