@@ -15,11 +15,12 @@
     "validate:links": "tsx scripts/check-local-links.ts",
     "privacy:scan": "tsx scripts/privacy-scan.ts",
     "openspec:validate": "openspec validate --all --strict && openspec validate --archived --strict",
-    "check": "npm run typecheck && npm test && npm run validate:links && npm run privacy:scan && npm run openspec:validate && npm run build"
+    "check": "npm run typecheck && npm test && npm run validate:links && npm run privacy:scan && npm run openspec:validate && npm run build",
+    "prepare": "if [ -z \"$CI\" ]; then git config core.hooksPath .githooks; fi"
   },
   "devDependencies": {
-    "@fission-ai/openspec": "1.14.1",
-    "@types/node": "^26.6.4",
+    "@fission-ai/openspec": "1.14.3",
+    "@types/node": "^26.6.5",
     "tsx": "^4.23.15",
     "typescript": "^7.0.2",
     "vite": "^8.3.4"
