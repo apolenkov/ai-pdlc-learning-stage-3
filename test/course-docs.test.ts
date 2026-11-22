@@ -17,7 +17,19 @@ test("late R3 entry preserves the shared request, intent, and personal branch bo
   assert.match(readme, /Шаг 3\. Изменение в OpenSpec: самостоятельный старт/u);
   assert.match(readme, /guides\/s3-openspec\.html/u);
   assert.match(readme, /ручном планировании без модели/u);
-  assert.match(readme, /создайте fork.*в интерфейсе GitLab/su);
+  // Две последовательности до адреса своей копии, затем общий clone.
+  assert.match(readme, /GitHub: откройте.*\*\*Fork\*\*.*\*\*Create fork\*\*/su);
+  assert.match(
+    readme,
+    /GitLab: \*\*New project\*\*.*\*\*Import project\*\*.*\*\*Repository by URL\*\*.*https:\/\/github\.com\/apolenkov\/sdd-guide-credit-calculator-stage-3\.git.*\*\*Create project\*\*/su,
+  );
+  assert.ok(readme.indexOf("Create project") < readme.indexOf("Git: Clone Repository"));
+  assert.doesNotMatch(readme, /Fork\*\* в интерфейсе GitLab/u);
+  assert.doesNotMatch(readme, /корпоративн/u);
+  // design.md — по четырём признакам, в упражнении не нужен.
+  assert.match(readme, /четыре признака для `design\.md`/u);
+  assert.match(readme, /ни один не затронут, поэтому `design\.md` не нужен; причину запишите в `proposal\.md`/u);
+  assert.doesNotMatch(readme, /Нужны `proposal\.md`, delta spec, `design\.md`/u);
   assert.match(
     readme,
     /git clone https:\/\/github\.com\/your_login\/sdd-guide-credit-calculator-stage-3\.git/u,
