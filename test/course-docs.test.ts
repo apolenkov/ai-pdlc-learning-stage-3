@@ -14,12 +14,13 @@ test("late R3 entry preserves the shared request, intent, and personal branch bo
   assert.match(readme, /intent-template\.md/u);
   assert.match(readme, /examples\/clear-calculation-result\.md/u);
   assert.match(readme, /intents\/clear-calculation-result\.md/u);
-  assert.match(readme, /R3 не обязательна.*следующий шаг R4/su);
+  assert.match(readme, /Шаг 3\. Изменение в OpenSpec: самостоятельный старт/u);
+  assert.match(readme, /guides\/s3-openspec\.html/u);
   assert.match(readme, /ручном планировании без модели/u);
   assert.match(readme, /создайте fork.*в интерфейсе GitLab/su);
   assert.match(
     readme,
-    /git clone https:\/\/gitlab\.example\.invalid\/your_login\/sdd-guide-credit-calculator-stage-3\.git/u,
+    /git clone https:\/\/github\.com\/your_login\/sdd-guide-credit-calculator-stage-3\.git/u,
   );
   assert.match(readme, /`origin`.*ваш fork/su);
   assert.match(readme, /git push -u origin course\/your_login\/stage-3-base/u);
@@ -40,13 +41,13 @@ test("late R3 entry preserves the shared request, intent, and personal branch bo
   assert.match(readme, /Source Control/u);
   assert.match(readme, /Publish Branch/u);
   assert.ok(
-    readme.indexOf("Git: Clone") < readme.indexOf("git clone https://gitlab.example.invalid"),
+    readme.indexOf("Git: Clone") < readme.indexOf("git clone https://github.com/your_login/"),
   );
   const terminalBlock =
     /<details><summary>Развернуть точные команды<\/summary>([\s\S]*?)<\/details>/u.exec(readme);
   assert.ok(terminalBlock);
   for (const command of [
-    /git clone https:\/\/gitlab\.example\.invalid\/your_login\/sdd-guide-credit-calculator-stage-3\.git/u,
+    /git clone https:\/\/github\.com\/your_login\/sdd-guide-credit-calculator-stage-3\.git/u,
     /git push -u origin course\/your_login\/stage-3-base/u,
     /git push -u origin course\/your_login\/stage-3-reset-years/u,
   ]) {
@@ -83,10 +84,10 @@ test("the cumulative contract maps current and pending behavior without claiming
   assert.match(traceability, /режим сохранён/u);
   assert.match(traceability, /незавершённая реализация/u);
   assert.match(transfer, /Полный SHA принятого R2/u);
-  assert.match(transfer, /отметка руководителя проекта/iu);
-  assert.match(transfer, /отметка аналитика/iu);
-  assert.match(transfer, /отметка технического руководителя/iu);
-  assert.match(transfer, /отметка архитектора, если изменение архитектурное или есть спор/iu);
+  assert.match(transfer, /одобрение владельца продукта/iu);
+  assert.match(transfer, /замечания аналитика и техлида/iu);
+  assert.match(transfer, /архитектор приглашён по признаку или спору/iu);
+  assert.match(transfer, /SHA diff, к которому относится одобрение/iu);
   assert.match(transfer, /course\/<login>\//u);
   assert.match(transfer, /Исходный путь: `specification\.md`/u);
   assert.match(transfer, /точную фиксацию.*полный SHA/su);
@@ -109,7 +110,7 @@ test("developer handoff separates repo-local and Store planning from code author
   assert.match(handoff, /course_source=\.\.\/sdd-guide-credit-calculator-stage-1/u);
   assert.match(handoff, /course_source=\.\.\/sdd-guide-credit-calculator-stage-2/u);
   assert.match(handoff, /git -C "\$course_source" show "\$\{source_sha\}:specification\.md"/u);
-  assert.match(handoff, /Сквозной R3: planning-only/u);
+  assert.match(handoff, /Сквозной шаг 3: planning-only/u);
   assert.match(handoff, /не запускайте `npm exec`, `npm ci` или runtime-check/iu);
   assert.match(handoff, /store doctor sdd-credit-calculator-product-meta --json/u);
   assert.match(handoff, /все фактические main specs и все активные Changes/u);
