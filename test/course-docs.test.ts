@@ -58,6 +58,11 @@ test("late R3 entry preserves the shared request, intent, and personal branch bo
   const terminalBlock =
     /<details><summary>Развернуть точные команды<\/summary>([\s\S]*?)<\/details>/u.exec(readme);
   assert.ok(terminalBlock);
+  // Команды commit и push стоят в основном тексте рядом с действиями VS Code, а не только в свёрнутом блоке.
+  const mainText = readme.slice(0, terminalBlock.index);
+  assert.match(mainText, /\*\*Commit\*\* \(`git commit -m "docs: propose reset and year-based term"`\)/u);
+  assert.match(mainText, /\*\*Publish Branch\*\*.*`git push -u origin course\/your_login\/stage-3-base`/u);
+  assert.match(mainText, /`git push -u origin course\/your_login\/stage-3-reset-years`/u);
   for (const command of [
     /git clone https:\/\/github\.com\/your_login\/sdd-guide-credit-calculator-stage-3\.git/u,
     /git push -u origin course\/your_login\/stage-3-base/u,
