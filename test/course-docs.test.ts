@@ -37,11 +37,27 @@ test("late R3 entry preserves the shared request, intent, and personal branch bo
   assert.match(readme, /`origin`.*ваш fork/su);
   assert.match(readme, /git push -u origin course\/your_login\/stage-3-base/u);
   assert.match(readme, /git push -u origin course\/your_login\/stage-3-reset-years/u);
-  const readmeHosts = [...readme.matchAll(/https?:\/\/([^/\s)`'"<>]+)/gu)].map((match) => match[1]);
+  // Any scheme, scheme-relative or scp-style address must lead to a public course host and owner.
+  const readmeAddresses = [
+    ...[...readme.matchAll(/(?:\b[a-z][a-z0-9+.-]*:)?\/\/(?:[^@/\s)`'"<>]+@)?([^/:\s)`'"<>]+)(?::\d+)?(\/[^\s)`'"<>]*)?/giu)].map(
+      (match) => ({ host: match[1].toLowerCase(), path: match[2] ?? '' }),
+    ),
+    ...[...readme.matchAll(/\b[\w.-]+@([\w-]+(?:\.[\w-]+)+):(\S*)/gu)].map((match) => ({
+      host: match[1].toLowerCase(),
+      path: `/${match[2]}`,
+    })),
+  ];
+  const publicGitHubOwners = ['apolenkov', 'your_login', 'Fission-AI'];
   assert.deepEqual(
-    readmeHosts.filter((host) => !['github.com', 'apolenkov.github.io'].includes(host)),
+    readmeAddresses
+      .filter(({ host, path }) =>
+        host === 'github.com'
+          ? !publicGitHubOwners.includes(path.split('/')[1] ?? '')
+          : host !== 'apolenkov.github.io',
+      )
+      .map(({ host, path }) => `${host}${path}`),
     [],
-    'README links only to the public course hosts, never to a corporate one',
+    'README links only to the public course hosts and owners, never to a corporate one',
   );
   assert.doesNotMatch(readme, /git remote add/u);
   assert.match(readme, /course\/your_login\/stage-3-base/u);
