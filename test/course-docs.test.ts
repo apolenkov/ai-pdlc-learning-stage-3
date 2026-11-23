@@ -37,8 +37,12 @@ test("late R3 entry preserves the shared request, intent, and personal branch bo
   assert.match(readme, /`origin`.*ваш fork/su);
   assert.match(readme, /git push -u origin course\/your_login\/stage-3-base/u);
   assert.match(readme, /git push -u origin course\/your_login\/stage-3-reset-years/u);
-  assert.doesNotMatch(readme, /git clone https:\/\/gitlab\.example\.invalid\/example-group\//u);
-  assert.doesNotMatch(readme, /git clone https:\/\/github\.example\.invalid\//u);
+  const readmeHosts = [...readme.matchAll(/https?:\/\/([^/\s)`'"<>]+)/gu)].map((match) => match[1]);
+  assert.deepEqual(
+    readmeHosts.filter((host) => !['github.com', 'apolenkov.github.io'].includes(host)),
+    [],
+    'README links only to the public course hosts, never to a corporate one',
+  );
   assert.doesNotMatch(readme, /git remote add/u);
   assert.match(readme, /course\/your_login\/stage-3-base/u);
   assert.match(readme, /course\/your_login\/stage-3-reset-years/u);
