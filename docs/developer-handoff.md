@@ -14,8 +14,8 @@ SHA планирования фиксирует источник требова�
 
 ```bash
 # Выберите ровно один источник.
-course_source=../sdd-guide-credit-calculator-stage-1
-# course_source=../sdd-guide-credit-calculator-stage-2
+course_source=../ai-pdlc-learning-stage-1
+# course_source=../ai-pdlc-learning-stage-2
 source_sha='<40_CHARACTER_SOURCE_SHA>'
 
 git -C "$course_source" cat-file -e "$source_sha^{commit}"
@@ -115,10 +115,10 @@ npm exec openspec -- validate add-reset-and-years-term --strict \
 2. В Store докажите совпадение каждого перенесённого файла с Git tree по SHA планирования. Проверьте `add-reset-and-years-term` и каждый другой Change, который реально входит в source inventory.
 3. В личной delivery-ветке сервиса покажите diff с Store. При расхождении остановитесь и разрешите содержательный конфликт; не объединяйте договор автоматически.
 4. Только после полного совпадения удалите из delivery-ветки локальные `openspec/specs` и `openspec/changes`, которые уже перенесены. Не удаляйте неперенесённые или неизвестные файлы.
-5. Скопируйте существующий [Store-only config template](https://github.com/apolenkov/sdd-guide-credit-calculator-stage-4-requirements/blob/main/docs/templates/store-only-config.yaml) из соседнего проверенного product-meta checkout:
+5. Скопируйте существующий [Store-only config template](https://github.com/apolenkov/ai-pdlc-learning-stage-4-requirements/blob/main/docs/templates/store-only-config.yaml) из соседнего проверенного product-meta checkout:
 
 ```bash
-cp ../sdd-guide-credit-calculator-stage-4-requirements/docs/templates/store-only-config.yaml \
+cp ../ai-pdlc-learning-stage-4-requirements/docs/templates/store-only-config.yaml \
   openspec/config.yaml
 npm exec openspec -- store doctor sdd-credit-calculator-product-meta --json
 npm exec openspec -- status --change add-reset-and-years-term --json \

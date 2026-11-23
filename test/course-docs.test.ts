@@ -21,7 +21,7 @@ test("late R3 entry preserves the shared request, intent, and personal branch bo
   assert.match(readme, /GitHub: откройте.*\*\*Fork\*\*.*\*\*Create fork\*\*/su);
   assert.match(
     readme,
-    /GitLab: \*\*New project\*\*.*\*\*Import project\*\*.*\*\*Repository by URL\*\*.*https:\/\/github\.com\/apolenkov\/sdd-guide-credit-calculator-stage-3\.git.*\*\*Create project\*\*/su,
+    /GitLab: \*\*New project\*\*.*\*\*Import project\*\*.*\*\*Repository by URL\*\*.*https:\/\/github\.com\/apolenkov\/ai-pdlc-learning-stage-3\.git.*\*\*Create project\*\*/su,
   );
   assert.ok(readme.indexOf("Create project") < readme.indexOf("Git: Clone Repository"));
   assert.doesNotMatch(readme, /Fork\*\* в интерфейсе GitLab/u);
@@ -32,7 +32,7 @@ test("late R3 entry preserves the shared request, intent, and personal branch bo
   assert.doesNotMatch(readme, /Нужны `proposal\.md`, delta spec, `design\.md`/u);
   assert.match(
     readme,
-    /git clone https:\/\/github\.com\/your_login\/sdd-guide-credit-calculator-stage-3\.git/u,
+    /git clone https:\/\/github\.com\/your_login\/ai-pdlc-learning-stage-3\.git/u,
   );
   assert.match(readme, /`origin`.*ваш fork/su);
   assert.match(readme, /git push -u origin course\/your_login\/stage-3-base/u);
@@ -84,7 +84,7 @@ test("late R3 entry preserves the shared request, intent, and personal branch bo
   assert.match(mainText, /\*\*Publish Branch\*\*.*`git push -u origin course\/your_login\/stage-3-base`/u);
   assert.match(mainText, /`git push -u origin course\/your_login\/stage-3-reset-years`/u);
   for (const command of [
-    /git clone https:\/\/github\.com\/your_login\/sdd-guide-credit-calculator-stage-3\.git/u,
+    /git clone https:\/\/github\.com\/your_login\/ai-pdlc-learning-stage-3\.git/u,
     /git push -u origin course\/your_login\/stage-3-base/u,
     /git push -u origin course\/your_login\/stage-3-reset-years/u,
   ]) {
@@ -144,8 +144,8 @@ test("the cumulative contract maps current and pending behavior without claiming
 test("developer handoff separates repo-local and Store planning from code authorization", async () => {
   const handoff = await read("docs/developer-handoff.md");
   assert.match(handoff, /instructions apply --change add-reset-and-years-term --json/u);
-  assert.match(handoff, /course_source=\.\.\/sdd-guide-credit-calculator-stage-1/u);
-  assert.match(handoff, /course_source=\.\.\/sdd-guide-credit-calculator-stage-2/u);
+  assert.match(handoff, /course_source=\.\.\/ai-pdlc-learning-stage-1/u);
+  assert.match(handoff, /course_source=\.\.\/ai-pdlc-learning-stage-2/u);
   assert.match(handoff, /git -C "\$course_source" show "\$\{source_sha\}:specification\.md"/u);
   assert.match(handoff, /Сквозной шаг 3: planning-only/u);
   assert.match(handoff, /не запускайте `npm exec`, `npm ci` или runtime-check/iu);
@@ -166,7 +166,7 @@ test("developer handoff separates repo-local and Store planning from code author
 test("package metadata uses the current repository name", async () => {
   const [manifest, lockfile] = await Promise.all([read("package.json"), read("package-lock.json")]);
   for (const content of [manifest, lockfile]) {
-    assert.match(content, /"name": "sdd-guide-credit-calculator-stage-3"/u);
+    assert.match(content, /"name": "ai-pdlc-learning-stage-3"/u);
     assert.doesNotMatch(content, /"name": "sdd-credit-calculator-example"/u);
   }
 });

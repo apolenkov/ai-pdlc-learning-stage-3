@@ -4,12 +4,12 @@
 
 | | |
 | --- | --- |
-| Шаг курса | [Шаг 3. Изменение в OpenSpec](https://apolenkov.github.io/customdev-learning/guides/s3-openspec.html) |
+| Шаг курса | [Шаг 3. Изменение в OpenSpec](https://apolenkov.github.io/ai-pdlc-learning/guides/s3-openspec.html) |
 | Вход | Два варианта: продолжение в прежнем checkout stage-1 после шага 2 (по странице шага 3) или самостоятельный старт из этого репозитория: готовое приложение, baseline spec, [обращение и ответы](request-and-answers.md), [шаблон intent](intent-template.md) и [разобранный пример](examples/clear-calculation-result.md). Рабочий intent вы создаёте сами |
 | Действие | Вручную подготовить активный Change `add-reset-and-years-term` в OpenSpec и отправить его на review; код и runtime-тесты не меняются, Apply не выполняется |
 | Результат | MR/PR с Change из ветки `course/your_login/stage-3-reset-years` в `course/your_login/stage-3-base` вашего fork, одобренный владельцем продукта |
 
-**С чего начать.** На GitHub нажмите **Fork**. Если вы работаете в GitLab, создайте проект через **New project → Import project → Repository by URL** и вставьте адрес `https://github.com/apolenkov/sdd-guide-credit-calculator-stage-3.git`.
+**С чего начать.** На GitHub нажмите **Fork**. Если вы работаете в GitLab, создайте проект через **New project → Import project → Repository by URL** и вставьте адрес `https://github.com/apolenkov/ai-pdlc-learning-stage-3.git`.
 
 ## 1. Подготовьте отдельный checkout
 
@@ -29,12 +29,12 @@ R1–R3 разбирают один запрос и один рабочий inte
 Получите свою копию репозитория одним из двух способов.
 
 - GitHub: откройте
-  [`sdd-guide-credit-calculator-stage-3`](https://github.com/apolenkov/sdd-guide-credit-calculator-stage-3)
+  [`ai-pdlc-learning-stage-3`](https://github.com/apolenkov/ai-pdlc-learning-stage-3)
   → **Fork** → **Create fork**. В своём fork нажмите **Code** и скопируйте
   HTTPS-адрес.
 - GitLab: **New project** → **Import project** → **Repository by URL**,
   вставьте
-  `https://github.com/apolenkov/sdd-guide-credit-calculator-stage-3.git`
+  `https://github.com/apolenkov/ai-pdlc-learning-stage-3.git`
   → **Create project**. В созданном проекте нажмите **Code** и скопируйте
   HTTPS-адрес.
 
@@ -44,7 +44,7 @@ R1–R3 разбирают один запрос и один рабочий inte
 В VS Code вызовите **Git: Clone Repository** (палитра команд или кнопка
 **Clone Repository** в **Source Control**), вставьте скопированный HTTPS-адрес
 своей копии и выберите папку учебных проектов. Откройте клонированную папку.
-Эквивалент в терминале: `git clone https://github.com/your_login/sdd-guide-credit-calculator-stage-3.git`
+Эквивалент в терминале: `git clone https://github.com/your_login/ai-pdlc-learning-stage-3.git`
 (вместо этого адреса подставьте адрес своей копии; в GitLab — адрес вашего
 проекта).
 
@@ -133,8 +133,8 @@ git status --short
 Clone своей копии (для GitLab — по адресу вашего проекта), проверка `origin` и обе личные ветки (эквивалент шага 1):
 
 ```bash
-git clone https://github.com/your_login/sdd-guide-credit-calculator-stage-3.git
-cd sdd-guide-credit-calculator-stage-3
+git clone https://github.com/your_login/ai-pdlc-learning-stage-3.git
+cd ai-pdlc-learning-stage-3
 git remote get-url origin
 git switch -c course/your_login/stage-3-base
 npm ci
